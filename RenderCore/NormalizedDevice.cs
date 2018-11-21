@@ -8,10 +8,15 @@ namespace WPRenderer
             device.ConvertFromNDC(v1.pos.x, v1.pos.y, out v1.pos.x, out v1.pos.y);
             device.ConvertFromNDC(v2.pos.x, v2.pos.y, out v2.pos.x, out v2.pos.y);
 
-            int x1 = Mathf.Round(v1.pos.x);
-            int x2 = Mathf.Round(v2.pos.x);
-            int y1 = Mathf.Round(v1.pos.y);
-            int y2 = Mathf.Round(v2.pos.y);
+            DrawLineInteger(device, ref v1, ref v2);
+        }
+
+        private static void DrawLineInteger(IDevice device, ref Vertex v1, ref Vertex v2)
+        {
+            int x1 = (int)v1.pos.x;
+            int x2 = (int)v2.pos.x;
+            int y1 = (int)v1.pos.y;
+            int y2 = (int)v2.pos.y;
 
             int dx = x2 - x1;
             int dy = y2 - y1;
@@ -119,7 +124,7 @@ namespace WPRenderer
             float disY = topY - bottomY;
             if (disY == 0)
             {
-                device.DrawLine(bottomLeft, bottomRight);
+                DrawLineInteger(device, ref bottomLeft, ref bottomRight);
             }
             else
             {
@@ -128,7 +133,7 @@ namespace WPRenderer
                     float t = (y - bottomY) / disY;
                     Vertex v1 = Vertex.Lerp(top, bottomLeft, t);
                     Vertex v2 = Vertex.Lerp(top, bottomRight, t);
-                    device.DrawLine(v1, v2);
+                    DrawLineInteger(device, ref v1, ref v2);
                 }
             }
         }
@@ -140,7 +145,7 @@ namespace WPRenderer
             float disY = topY - bottomY;
             if (disY == 0)
             {
-                device.DrawLine(topLeft, topRight);
+                DrawLineInteger(device, ref topLeft, ref topRight);
             }
             else
             {
@@ -149,7 +154,7 @@ namespace WPRenderer
                     float t = (y - bottomY) / disY;
                     Vertex v1 = Vertex.Lerp(bottom, topLeft, t);
                     Vertex v2 = Vertex.Lerp(bottom, topRight, t);
-                    device.DrawLine(v1, v2);
+                    DrawLineInteger(device, ref v1, ref v2);
                 }
             }
         }

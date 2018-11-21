@@ -109,5 +109,15 @@ namespace WPRenderer
         {
             return (int)(x + 0.5f);
         }
+
+        public static int FloorToInt(float f)
+        {
+            return (int)Math.Floor(f);
+        }
+
+        public static int CeilToInt(float f)
+        {
+            return (int)Math.Ceiling(f);
+        }
     }
 }

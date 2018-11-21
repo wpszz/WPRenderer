@@ -89,6 +89,10 @@ namespace WindowsFormsDevice
             // NDC to console device coordinates(left up[0, 0])
             deviceX = (normalizedX + 1f) * 0.5f * deviceWidth;
             deviceY = (1f - normalizedY) * 0.5f * deviceHeight;
+
+            // avoid gap between triangles by float accuracy loss
+            deviceX = Mathf.CeilToInt(deviceX);
+            deviceY = Mathf.CeilToInt(deviceY);
         }
 
         public void ConvertToNDC(float deviceX, float deviceY, out float normalizedX, out float normalizedY)
