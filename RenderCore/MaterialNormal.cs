@@ -7,20 +7,18 @@ namespace WPRenderer
         public float deltaScale = 0.5f;
         public float heightScale = 0.03f;
 
-        private Vector4 mainTextureTexelSize;
-
         public MaterialNormal(Texture mainTexture, Color mainColor)
             : base(mainTexture, mainColor)
         {
-            mainTextureTexelSize = TexelSize(mainTexture);
-        }
-
-        public override Vector4 CallVertexStage(ref Vertex vertex)
-        {
-            return currentMVP * vertex.pos;
         }
 
         public override Color CallFragmentStage(ref Vertex vertex)
+        {
+            Vector3 normal = CalculateNormal(ref vertex);
+            return new Color(normal.x, normal.y, normal.z);
+        }
+
+        protected Vector3 CalculateNormal(ref Vertex vertex)
         {
             Vector2 deltaU = new Vector2(mainTextureTexelSize.x * deltaScale, 0);
             float h1_u = Color.Gray(Tex2D(mainTexture, vertex.uv - deltaU));
@@ -39,7 +37,7 @@ namespace WPRenderer
             // tangent Space (0, 0, 1) mapping to (0.5, 0.5, 1)
             normal = normal * 0.5f + Vector3.one * 0.5f;
 
-            return new Color(normal.x, normal.y, normal.z);
+            return normal;
         }
     }
 }

@@ -104,6 +104,7 @@ namespace WindowsFormsDevice
                     new MaterialEffect(material.mainTexture, Color.white),
                     new MaterialGray(material.mainTexture, Color.white),
                     new MaterialNormal(material.mainTexture, Color.white),
+                    new MaterialBumpSelf(material.mainTexture, Color.white),
                 };
             }
         }

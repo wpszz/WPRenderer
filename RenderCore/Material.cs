@@ -7,10 +7,15 @@ namespace WPRenderer
         public Texture mainTexture;
         public Color mainColor = Color.white;
 
+        protected Vector4 mainTextureTexelSize;
+
         public Material(Texture mainTexture, Color mainColor)
         {
             this.mainTexture = mainTexture;
             this.mainColor = mainColor;
+
+            mainTextureTexelSize = TexelSize(mainTexture);
+
         }
 
         public virtual Vector4 CallVertexStage(ref Vertex vertex)
