@@ -31,5 +31,19 @@ namespace WPRenderer
                 return tex.Sample(u, v);
             return Color.white;
         }
+
+        protected static Color Tex2D(Texture tex, Vector2 uv)
+        {
+            if (tex != null)
+                return tex.Sample(uv.x, uv.y);
+            return Color.white;
+        }
+
+        protected static Vector4 TexelSize(Texture tex)
+        {
+            if (tex != null)
+                return new Vector4(1f / tex.width, 1f / tex.height, tex.width, tex.height);
+            return new Vector4(1, 1, 1, 1);
+        }
     }
 }

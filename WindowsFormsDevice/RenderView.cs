@@ -21,8 +21,9 @@ namespace WindowsFormsDevice
         Camera camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1), Vector3.up, (float)DeviceWidth / DeviceHeight);
         Light light = new Light(new Vector3(1, 0, 0), Color.white, 1f);
         Mesh mesh = Mesh.CreateCube();
-        Material material = new MaterialSpecular(LoadTexture("szz.jpg").SetWrap(true), Color.white, new Vector4(4, 4, 0f, 0))
+        Material material = new MaterialSpecular(LoadTexture("szz.jpg").SetWrapMode(true).SetLerpMode(true), Color.white, new Vector4(4, 4, 0f, 0))
             .SetSpecColor(Color.yellow).SetSpecular(2.5f).SetGloss(1.5f);
+        Texture texGrid = LoadTexture("grid.jpg");
 
         public RenderView()
         {
@@ -89,8 +90,7 @@ namespace WindowsFormsDevice
 
         Material[] materials;
         int changeMaterialIndex = 0;
-
-        private void ChangeMaterial_Click(object sender, EventArgs e)
+        private void InitializeMaterials()
         {
             if (materials == null)
             {
@@ -100,10 +100,19 @@ namespace WindowsFormsDevice
                     new MaterialDiffuse(material.mainTexture, Color.yellow, new Vector4(1, 1, 0, 0)),
                     new MaterialTiling(material.mainTexture, Color.white, new Vector4(8, 8, 0, 0)),
                     new Material(material.mainTexture, Color.green),
-                    new MaterialDiffuse(LoadTexture("grid.jpg"), Color.white, new Vector4(1, 1, 0, 0)),
-                    new MaterialEffect(material.mainTexture, Color.white)
+                    new MaterialDiffuse(texGrid, Color.white, new Vector4(1, 1, 0, 0)),
+                    new MaterialEffect(material.mainTexture, Color.white),
+                    new MaterialGray(material.mainTexture, Color.white),
+                    new MaterialNormal(material.mainTexture, Color.white),
                 };
             }
+        }
+
+
+        private void ChangeMaterial_Click(object sender, EventArgs e)
+        {
+            InitializeMaterials();
+
             changeMaterialIndex++;
             if (changeMaterialIndex >= materials.Length)
                 changeMaterialIndex = 0;

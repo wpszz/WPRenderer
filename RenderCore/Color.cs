@@ -77,6 +77,11 @@ namespace WPRenderer
             return new Color(Mathf.Clamp01(c.r), Mathf.Clamp01(c.g), Mathf.Clamp01(c.b), Mathf.Clamp01(c.a));
         }
 
+        public static float Gray(Color c)
+        {
+            return c.r * 0.2126f + c.g * 0.7152f + c.b * 0.0722f;
+        }
+
         public static Color operator +(Color a, Color b)
         {
             return new Color(a.r + b.r, a.g + b.g, a.b + b.b, a.a + b.a);

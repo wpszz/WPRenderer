@@ -102,7 +102,7 @@ namespace WPRenderer
         public static Vector3 Normalize(Vector3 value)
         {
             float num = Vector3.Magnitude(value);
-            if (num > 1E-05f)
+            if (num > 1E-08f)
             {
                 return value / num;
             }
