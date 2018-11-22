@@ -24,6 +24,7 @@ namespace WindowsFormsDevice
         Material material = new MaterialSpecular(LoadTexture("szz.jpg").SetWrapMode(true).SetLerpMode(true), Color.white, new Vector4(4, 4, 0f, 0))
             .SetSpecColor(Color.yellow).SetSpecular(2.5f).SetGloss(1.5f);
         Texture texGrid = LoadTexture("grid.jpg");
+        Texture texNormal = LoadTexture("normal.jpg");
 
         public RenderView()
         {
@@ -104,7 +105,9 @@ namespace WindowsFormsDevice
                     new MaterialEffect(material.mainTexture, Color.white),
                     new MaterialGray(material.mainTexture, Color.white),
                     new MaterialNormal(material.mainTexture, Color.white),
-                    new MaterialBumpSelf(material.mainTexture, Color.white),
+                    new MaterialBumpSelf(material.mainTexture, Color.gray),
+                    new Material(texNormal, Color.white),
+                    new MaterialBump(material.mainTexture, Color.gray, texNormal),
                 };
             }
         }

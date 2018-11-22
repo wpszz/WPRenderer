@@ -53,6 +53,14 @@ namespace WPRenderer
             }
         }
 
+        public static Color gray
+        {
+            get
+            {
+                return new Color(0.5f, 0.5f, 0.5f, 1f);
+            }
+        }
+
         public Color(float r, float g, float b, float a = 1)
         {
             this.r = r;

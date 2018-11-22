@@ -45,6 +45,7 @@
     <Compile Include="Color.cs" />
     <Compile Include="GpuShare.cs" />
     <Compile Include="Light.cs" />
+    <Compile Include="MaterialBump.cs" />
     <Compile Include="MaterialBumpSelf.cs" />
     <Compile Include="MaterialNormal.cs" />
     <Compile Include="MaterialGray.cs" />
