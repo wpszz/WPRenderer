@@ -7,6 +7,7 @@ namespace WPRenderer
         public Color color;
         public Vector2 uv;
         public Vector3 normal;
+        public Vector3 tangent;
 
         // extra datas, used by shader
         public Vector3 worldPos;
@@ -17,6 +18,9 @@ namespace WPRenderer
             this.color = color;
             this.uv = uv;
             this.normal = normal;
+
+            // tangent will calculate from triangles
+            this.tangent = Vector3.right;
 
             // extra datas, used by shader
             this.worldPos = pos;
@@ -30,6 +34,9 @@ namespace WPRenderer
                   Vector2.Lerp(from.uv, to.uv, t),
                   Vector3.Lerp(from.normal, to.normal, t)
               );
+
+            // copy tangent
+            v.tangent = from.tangent;
 
             // extra datas, used by shader
             v.worldPos = Vector3.Lerp(from.worldPos, to.worldPos, t);

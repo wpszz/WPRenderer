@@ -56,6 +56,7 @@ namespace WPRenderer
             currentV = V;
             currentP = P;
             currentMVP = P * (V * M);
+            currentInverseM = Matrix4x4.Inverse(M);
 
             for (int i = 0, count = mesh.indexs.Count; i < count; i += 3)
             {

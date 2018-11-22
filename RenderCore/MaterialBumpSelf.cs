@@ -4,12 +4,35 @@ namespace WPRenderer
 {
     public class MaterialBumpSelf : MaterialNormal
     {
-        float bumpNormalScale = 1f;
+        public float bumpScale = 5f;
+
+        Vector3 tangentSpaceLight;
 
         public MaterialBumpSelf(Texture mainTexture, Color mainColor)
             : base(mainTexture, mainColor)
         {
 
+        }
+
+        public override Vector4 CallVertexStage(ref Vertex vertex)
+        {
+            if (currentLight != null)
+            {
+                Vector3 normal = vertex.normal.normalized;
+                Vector3 tangent = vertex.tangent.normalized;
+                Vector3 binormal = Vector3.Cross(normal, tangent);
+
+                Matrix4x4 objectToTangentSpace = new Matrix4x4(
+                    tangent.x, tangent.y, tangent.z, 0,
+                    binormal.x, binormal.y, binormal.z, 0,
+                    normal.x, normal.y, normal.z, 0,
+                    0, 0, 0, 1
+                );
+
+                tangentSpaceLight = objectToTangentSpace * currentInverseM * currentLight.direction;
+            }
+
+            return base.CallVertexStage(ref vertex);
         }
 
         public override Color CallFragmentStage(ref Vertex vertex)
@@ -22,14 +45,14 @@ namespace WPRenderer
                 normal = normal * 2 - Vector3.one;
 
                 // scale normal
-                normal.x *= bumpNormalScale;
-                normal.y *= bumpNormalScale;
+                normal.x *= bumpScale;
+                normal.y *= bumpScale;
                 normal.Normalize();
 
                 // lambert
-                //float diffuse = currentLight.intensity * Vector3.Dot(currentLight.direction, normal);
+                float diffuse = currentLight.intensity * Vector3.Dot(tangentSpaceLight, normal);
                 // half lambert
-                float diffuse = 0.5f * currentLight.intensity * Vector3.Dot(currentLight.direction, normal) + 0.5f;
+                //float diffuse = 0.5f * currentLight.intensity * Vector3.Dot(tangentSpaceLight, normal) + 0.5f;
                 color *= currentLight.color * diffuse;
             }
             return color;

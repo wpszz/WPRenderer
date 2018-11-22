@@ -21,6 +21,19 @@ namespace WPRenderer
             }
         }
 
+        public float determinant
+        {
+            get
+            {
+                return Determinant4x4(
+                    m00, m01, m02, m03,
+                    m10, m11, m12, m13,
+                    m20, m21, m22, m23,
+                    m30, m31, m32, m33
+                );
+            }
+        }
+
         public Matrix4x4(
             float m00, float m01, float m02, float m03,
             float m10, float m11, float m12, float m13,
@@ -111,7 +124,82 @@ namespace WPRenderer
             Matrix4x4 matScale = Scale(s);
             Matrix4x4 matTranslation = Translate(pos);
             Matrix4x4 matRotation = q.GetMatrix();
-            return matTranslation * (matRotation * matScale);
+            return matTranslation * matRotation * matScale;
+        }
+
+        public static Matrix4x4 TRSInverse(Vector3 pos, Quaternion q, Vector3 s)
+        {
+            Matrix4x4 matScaleInverse = Scale(new Vector3(1 / s.x, 1 / s.y, 1 / s.z));
+            Matrix4x4 matTranslationInverse = Translate(-pos);
+            Matrix4x4 matRotationInverse = Transpose(q.GetMatrix());
+            return matScaleInverse * matRotationInverse * matTranslationInverse;
+        }
+
+        public static Matrix4x4 Transpose(Matrix4x4 m)
+        {
+            return new Matrix4x4(
+                m.m00,      m.m10,      m.m20,      m.m30,
+                m.m01,      m.m11,      m.m21,      m.m31,
+                m.m02,      m.m12,      m.m22,      m.m32,
+                m.m03,      m.m13,      m.m23,      m.m33
+            );
+        }
+
+        public static Matrix4x4 Inverse(Matrix4x4 m)
+        {
+            float c00 = Determinant3x3(m.m11, m.m12, m.m13, m.m21, m.m22, m.m23, m.m31, m.m32, m.m33);
+            float c01 = Determinant3x3(m.m10, m.m12, m.m13, m.m20, m.m22, m.m23, m.m30, m.m32, m.m33);
+            float c02 = Determinant3x3(m.m10, m.m11, m.m13, m.m20, m.m21, m.m23, m.m30, m.m31, m.m33);
+            float c03 = Determinant3x3(m.m10, m.m11, m.m12, m.m20, m.m21, m.m22, m.m30, m.m31, m.m32);
+
+            float c10 = Determinant3x3(m.m01, m.m02, m.m03, m.m21, m.m22, m.m23, m.m31, m.m32, m.m33);
+            float c11 = Determinant3x3(m.m00, m.m02, m.m03, m.m20, m.m22, m.m23, m.m30, m.m32, m.m33);
+            float c12 = Determinant3x3(m.m00, m.m01, m.m03, m.m20, m.m21, m.m23, m.m30, m.m31, m.m33);
+            float c13 = Determinant3x3(m.m00, m.m01, m.m02, m.m20, m.m21, m.m22, m.m30, m.m31, m.m32);
+
+            float c20 = Determinant3x3(m.m01, m.m02, m.m03, m.m11, m.m12, m.m13, m.m31, m.m32, m.m33);
+            float c21 = Determinant3x3(m.m00, m.m02, m.m03, m.m10, m.m12, m.m13, m.m30, m.m32, m.m33);
+            float c22 = Determinant3x3(m.m00, m.m01, m.m03, m.m10, m.m11, m.m13, m.m30, m.m31, m.m33);
+            float c23 = Determinant3x3(m.m00, m.m01, m.m02, m.m10, m.m11, m.m12, m.m30, m.m31, m.m32);
+
+            float c30 = Determinant3x3(m.m01, m.m02, m.m03, m.m11, m.m12, m.m13, m.m21, m.m22, m.m23);
+            float c31 = Determinant3x3(m.m00, m.m02, m.m03, m.m10, m.m12, m.m13, m.m20, m.m22, m.m23);
+            float c32 = Determinant3x3(m.m00, m.m01, m.m03, m.m10, m.m11, m.m13, m.m20, m.m21, m.m23);
+            float c33 = Determinant3x3(m.m00, m.m01, m.m02, m.m10, m.m11, m.m12, m.m20, m.m21, m.m22);
+
+            Matrix4x4 adjoint = new Matrix4x4(
+                c00,     -c01,      c02,       -c03,
+               -c10,      c11,     -c12,        c13,
+                c20,     -c21,      c22,       -c23,
+               -c30,      c31,     -c32,        c33
+            );
+
+            Matrix4x4 adjointT = Transpose(adjoint);
+
+            float detM = m.determinant;
+
+            return adjointT * (1 / detM);
+        }
+
+        public static float Determinant4x4(
+            float m00, float m01, float m02, float m03,
+            float m10, float m11, float m12, float m13,
+            float m20, float m21, float m22, float m23,
+            float m30, float m31, float m32, float m33)
+        {
+            float c00 = m11 * (m22 * m33 - m32 * m23) - m12 * (m21 * m33 - m31 * m23) + m13 * (m21 * m32 - m31 * m22);
+            float c01 = m10 * (m22 * m33 - m32 * m23) - m12 * (m20 * m33 - m30 * m23) + m13 * (m20 * m32 - m30 * m22);
+            float c02 = m10 * (m21 * m33 - m31 * m23) - m11 * (m20 * m33 - m30 * m23) + m13 * (m20 * m31 - m30 * m21);
+            float c03 = m10 * (m21 * m32 - m31 * m22) - m11 * (m20 * m32 - m30 * m22) + m12 * (m20 * m31 - m30 * m21);
+            return m00 * c00 - m01 * c01 + m02 * c02 - m03 * c03;
+        }
+
+        public static float Determinant3x3(
+            float m00, float m01, float m02,
+            float m10, float m11, float m12,
+            float m20, float m21, float m22)
+        {
+            return m00 * (m11 * m22 - m12 * m21) - m01 * (m10 * m22 - m12 * m20) + m02 * (m10 * m21 - m11 * m20);
         }
 
         public override string ToString()
@@ -160,6 +248,16 @@ namespace WPRenderer
                 lhs.m10 * v.x + lhs.m11 * v.y + lhs.m12 * v.z + lhs.m13,
                 lhs.m20 * v.x + lhs.m21 * v.y + lhs.m22 * v.z + lhs.m23,
                 lhs.m30 * v.x + lhs.m31 * v.y + lhs.m32 * v.z + lhs.m33
+            );
+        }
+
+        public static Matrix4x4 operator *(Matrix4x4 lhs, float rhs)
+        {
+            return new Matrix4x4(
+                lhs.m00 * rhs, lhs.m01 * rhs, lhs.m02 * rhs, lhs.m03 * rhs,
+                lhs.m10 * rhs, lhs.m11 * rhs, lhs.m12 * rhs, lhs.m13 * rhs,
+                lhs.m20 * rhs, lhs.m21 * rhs, lhs.m22 * rhs, lhs.m23 * rhs,
+                lhs.m30 * rhs, lhs.m31 * rhs, lhs.m32 * rhs, lhs.m33 * rhs
             );
         }
 
