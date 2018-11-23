@@ -4,26 +4,29 @@ namespace WPRenderer
     public sealed class GpuProgram : GpuShare
     {
         private static float[,] zBuffers;
-        private static int zBuffersWidth, zBuffersHeight;
+        private static Color[,] colorBuffers;
+        private static int bufferWidth, bufferHeight;
 
         public static void Initialize(IDevice device, int width, int height)
         {
             device.Initialize(width, height);
 
             zBuffers = new float[width, height];
-            zBuffersWidth = width;
-            zBuffersHeight = height;
+            colorBuffers = new Color[width, height];
+            bufferWidth = width;
+            bufferHeight = height;
         }
 
         public static void Clear(IDevice device, Color blackground)
         {
             device.Clear(blackground);
 
-            for (int i = 0; i < zBuffersWidth; i++)
+            for (int i = 0; i < bufferWidth; i++)
             {
-                for (int j = 0; j < zBuffersHeight; j++)
+                for (int j = 0; j < bufferHeight; j++)
                 {
                     zBuffers[i, j] = float.MinValue;
+                    colorBuffers[i, j] = blackground;
                 }
             }
 
@@ -88,11 +91,21 @@ namespace WPRenderer
             return currentMVP * vertex.pos;
         }
 
-        public static Color CallFragmentStage(ref Vertex vertex)
+        public static Color CallFragmentStage(ref Vertex vertex, int x, int y)
         {
             Color color = vertex.color;
             if (currentMaterial != null)
+            {
                 color = currentMaterial.CallFragmentStage(ref vertex);
+
+                // blend
+                if (currentMaterial.blendEnbale)
+                    color = BlendColor.Calculate(color, GetBufferColor(x, y),
+                        currentMaterial.blendOp, currentMaterial.srcFactor, currentMaterial.destFactor, currentMaterial.srcFactorA, currentMaterial.destFactorA);
+            }
+
+            SetBufferColor(x, y, color);
+
             // simple clamp color values to [0, 1]
             color = Color.Saturate(color);
             return color;
@@ -100,9 +113,23 @@ namespace WPRenderer
 
         //=================================================================
 
+        public static bool IsZTestOn()
+        {
+            if (currentMaterial != null)
+                return currentMaterial.zTest;
+            return true;
+        }
+
+        public static bool IsZWriteOn()
+        {
+            if (currentMaterial != null)
+                return currentMaterial.zWrite;
+            return true;
+        }
+
         public static bool ZTest(int x, int y, float z, bool writeON)
         {
-            if (x >= 0 && x < zBuffersWidth && y >= 0 && y < zBuffersHeight)
+            if (x >= 0 && x < bufferWidth && y >= 0 && y < bufferHeight)
             {
                 if (zBuffers[x, y] <= z)
                 {
@@ -112,6 +139,23 @@ namespace WPRenderer
                 }
             }
             return false;
+        }
+
+        public static void SetBufferColor(int x, int y, Color color)
+        {
+            if (x >= 0 && x < bufferWidth && y >= 0 && y < bufferHeight)
+            {
+                colorBuffers[x, y] = color;
+            }
+        }
+
+        public static Color GetBufferColor(int x, int y)
+        {
+            if (x >= 0 && x < bufferWidth && y >= 0 && y < bufferHeight)
+            {
+                return colorBuffers[x, y];
+            }
+            return Color.white;
         }
 
         // CVV cull with homogeneous coordinate

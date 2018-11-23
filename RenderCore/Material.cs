@@ -7,6 +7,19 @@ namespace WPRenderer
         public Texture mainTexture;
         public Color mainColor = Color.white;
 
+        // zTest
+        public bool zTest = true;
+        public bool zWrite = true;
+
+        // blend settings
+        public bool blendEnbale = false;
+        public BlendOp blendOp = BlendOp.Add;
+        public BlendMode srcFactor = BlendMode.SrcAlpha;
+        public BlendMode destFactor = BlendMode.OneMinusSrcAlpha;
+        public BlendMode srcFactorA = BlendMode.SrcAlpha;
+        public BlendMode destFactorA = BlendMode.OneMinusSrcAlpha;
+
+        // internal cache variables
         protected Vector4 mainTextureTexelSize;
 
         public Material(Texture mainTexture, Color mainColor)
@@ -16,7 +29,55 @@ namespace WPRenderer
 
             mainTextureTexelSize = TexelSize(mainTexture);
 
+
         }
+        //===================================================================
+
+        public Material SetZTestEnable(bool enable)
+        {
+            this.zTest = enable;
+            return this;
+        }
+
+        public Material SetZWriteEnable(bool enable)
+        {
+            this.zWrite = enable;
+            return this;
+        }
+
+        //===================================================================
+
+        public Material SetBlendEnable(bool enable)
+        {
+            this.blendEnbale = enable;
+            return this;
+        }
+
+        public Material SetBlendOp(BlendOp op)
+        {
+            this.blendOp = op;
+            return this;
+        }
+
+        public Material SetBlendFactors(BlendMode srcFactor, BlendMode destFactor)
+        {
+            this.srcFactor = srcFactor;
+            this.destFactor = destFactor;
+            this.srcFactorA = srcFactor;
+            this.destFactorA = destFactor;
+            return this;
+        }
+
+        public Material SetBlendFactors(BlendMode srcFactor, BlendMode destFactor, BlendMode srcFactorA, BlendMode destFactorA)
+        {
+            this.srcFactor = srcFactor;
+            this.destFactor = destFactor;
+            this.srcFactorA = srcFactorA;
+            this.destFactorA = destFactorA;
+            return this;
+        }
+
+        //===================================================================
 
         public virtual Vector4 CallVertexStage(ref Vertex vertex)
         {

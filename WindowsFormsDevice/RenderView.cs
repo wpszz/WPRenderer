@@ -63,20 +63,31 @@ namespace WindowsFormsDevice
             //    new Vertex(new Vector3(-0.25f, -0.25f), Color.green, new Vector2(0, 0)),
             //    new Vertex(new Vector3(0.25f, -0.45f), Color.yellow, new Vector2(0, 0)));
 
-            float pitch = -60 + TimeHelper.GetTimeSinceStartup() * 25;
-            float yaw = TimeHelper.GetTimeSinceStartup() * 25;
-            float roll = 0;
-            Matrix4x4 M = Matrix4x4.TRS(new Vector3(0, 0, 2.5f), Quaternion.Euler(pitch, yaw, roll), Vector3.one);
-            Matrix4x4 V = camera.WorldToCameraMatrix();
-            Matrix4x4 P = camera.ProjectionMatrix();
-            GpuProgram.DrawCall(device, meshCube, material, M, V, P);
+            Matrix4x4 M, V, P;
+            float x, y, z;
+            float pitch, yaw, roll;
+            float curTime = TimeHelper.GetTimeSinceStartup();
 
-            float y = Mathf.Repeat(TimeHelper.GetTimeSinceStartup() * 1, 6) - 3f;
+            V = camera.WorldToCameraMatrix();
+            P = camera.ProjectionMatrix();
+
+            x = -1f;
+            y = Mathf.Repeat(curTime * 1, 6) - 3f;
+            z = 4.5f;
             pitch = -90;
-            yaw = TimeHelper.GetTimeSinceStartup() * 45;
+            yaw = curTime * 45;
             roll = 0;
-            M = Matrix4x4.TRS(new Vector3(-1.0f, y, 4.5f), Quaternion.Euler(pitch, yaw, roll), Vector3.one);
+            M = Matrix4x4.TRS(new Vector3(x, y, z), Quaternion.Euler(pitch, yaw, roll), Vector3.one);
             GpuProgram.DrawCall(device, meshPanel, material, M, V, P);
+
+            x = 0;
+            y = 0;
+            z = 2.5f;
+            pitch = -60 + curTime * 25;
+            yaw = curTime * 25;
+            roll = 0;
+            M = Matrix4x4.TRS(new Vector3(x, y, z), Quaternion.Euler(pitch, yaw, roll), Vector3.one);
+            GpuProgram.DrawCall(device, meshCube, material, M, V, P);
         }
 
         static Texture LoadTexture(string path)
@@ -116,10 +127,21 @@ namespace WindowsFormsDevice
                     new MaterialBumpSelf(material.mainTexture, Color.gray),
                     new Material(texNormal, Color.white),
                     new MaterialBump(material.mainTexture, Color.gray, texNormal),
+                    new Material(material.mainTexture, Color.white).SetZTestEnable(false),
+                    new Material(material.mainTexture, Color.white).SetZWriteEnable(false),
+                    new Material(material.mainTexture, new Color(1, 1, 1, 0.5f)).SetBlendEnable(true).SetZWriteEnable(false),
                 };
             }
         }
 
+        private Material GetMaterial(int index)
+        {
+            InitializeMaterials();
+
+            if (index >= 0 && index < materials.Length)
+                return materials[index];
+            return material;
+        }
 
         private void ChangeMaterial_Click(object sender, EventArgs e)
         {
