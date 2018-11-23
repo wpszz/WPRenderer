@@ -20,7 +20,8 @@ namespace WindowsFormsDevice
         const int DeviceHeight = 480;
         Camera camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1), Vector3.up, (float)DeviceWidth / DeviceHeight);
         Light light = new Light(new Vector3(1, 0, 0), Color.white, 1f);
-        Mesh mesh = Mesh.CreateCube();
+        Mesh meshCube = Mesh.CreateCube();
+        Mesh meshPanel = Mesh.CreatePanel();
         Material material = new MaterialSpecular(LoadTexture("szz.jpg").SetWrapMode(true).SetLerpMode(true), Color.white, new Vector4(4, 4, 0f, 0))
             .SetSpecColor(Color.yellow).SetSpecular(2.5f).SetGloss(1.5f);
         Texture texGrid = LoadTexture("grid.jpg");
@@ -68,7 +69,14 @@ namespace WindowsFormsDevice
             Matrix4x4 M = Matrix4x4.TRS(new Vector3(0, 0, 2.5f), Quaternion.Euler(pitch, yaw, roll), Vector3.one);
             Matrix4x4 V = camera.WorldToCameraMatrix();
             Matrix4x4 P = camera.ProjectionMatrix();
-            GpuProgram.DrawCall(device, mesh, material, M, V, P);
+            GpuProgram.DrawCall(device, meshCube, material, M, V, P);
+
+            float y = Mathf.Repeat(TimeHelper.GetTimeSinceStartup() * 1, 6) - 3f;
+            pitch = -90;
+            yaw = TimeHelper.GetTimeSinceStartup() * 45;
+            roll = 0;
+            M = Matrix4x4.TRS(new Vector3(-1.0f, y, 4.5f), Quaternion.Euler(pitch, yaw, roll), Vector3.one);
+            GpuProgram.DrawCall(device, meshPanel, material, M, V, P);
         }
 
         static Texture LoadTexture(string path)
