@@ -112,6 +112,8 @@ namespace WPRenderer
             {
                 float t = (v2.pos.y - v1.pos.y) / (v3.pos.y - v1.pos.y);
                 Vertex tmpV = Vertex.Lerp(v1, v3, t);
+                // fixed float accuracy loss
+                tmpV.pos.y = v2.pos.y;
                 DrawFlatBottomTriangle(device, v2, tmpV, v3);
                 DrawFlatTopTriangle(device, v2, tmpV, v1);
             }
@@ -131,8 +133,11 @@ namespace WPRenderer
                 for (float y = topY; y >= bottomY; y--)
                 {
                     float t = (y - bottomY) / disY;
-                    Vertex v1 = Vertex.Lerp(top, bottomLeft, t);
-                    Vertex v2 = Vertex.Lerp(top, bottomRight, t);
+                    Vertex v1 = Vertex.Lerp(bottomLeft, top, t);
+                    Vertex v2 = Vertex.Lerp(bottomRight, top, t);
+                    // fixed float accuracy loss
+                    v1.pos.y = y;
+                    v2.pos.y = y;
                     DrawLineInteger(device, ref v1, ref v2);
                 }
             }
@@ -154,6 +159,9 @@ namespace WPRenderer
                     float t = (y - bottomY) / disY;
                     Vertex v1 = Vertex.Lerp(bottom, topLeft, t);
                     Vertex v2 = Vertex.Lerp(bottom, topRight, t);
+                    // fixed float accuracy loss
+                    v1.pos.y = y;
+                    v2.pos.y = y;
                     DrawLineInteger(device, ref v1, ref v2);
                 }
             }
