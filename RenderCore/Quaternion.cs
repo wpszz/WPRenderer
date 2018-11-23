@@ -24,10 +24,11 @@ namespace WPRenderer
             float wx = w * x;
             float wy = w * y;
             float wz = w * z;
+            // column-major
             return new Matrix4x4(
-                1.0f - 2.0f * (y2 + z2),    2.0f * (xy - wz),           2.0f * (xz + wy),           0.0f,
-                2.0f * (xy + wz),           1.0f - 2.0f * (x2 + z2),    2.0f * (yz - wx),           0.0f,
-                2.0f * (xz - wy),           2.0f * (yz + wx),           1.0f - 2.0f * (x2 + y2),    0.0f,
+                1.0f - 2.0f * (y2 + z2),    2.0f * (xy + wz),           2.0f * (xz - wy),           0.0f,
+                2.0f * (xy - wz),           1.0f - 2.0f * (x2 + z2),    2.0f * (yz + wx),           0.0f,
+                2.0f * (xz + wy),           2.0f * (yz - wx),           1.0f - 2.0f * (x2 + y2),    0.0f,
                 0.0f,                       0.0f,                       0.0f,                       1.0f
             );
         }
@@ -38,10 +39,16 @@ namespace WPRenderer
             x = x * Mathf.Deg2Rad * 0.5f;
             y = y * Mathf.Deg2Rad * 0.5f;
             z = z * Mathf.Deg2Rad * 0.5f;
-            float qx = Mathf.Sin(x) * Mathf.Cos(y) * Mathf.Cos(z) + Mathf.Cos(x) * Mathf.Sin(y) * Mathf.Sin(z);
-            float qy = Mathf.Cos(x) * Mathf.Sin(y) * Mathf.Cos(z) - Mathf.Sin(x) * Mathf.Cos(y) * Mathf.Sin(z);
-            float qz = Mathf.Cos(x) * Mathf.Cos(y) * Mathf.Sin(z) - Mathf.Sin(x) * Mathf.Sin(y) * Mathf.Cos(z);
-            float qw = Mathf.Cos(x) * Mathf.Cos(y) * Mathf.Cos(z) + Mathf.Sin(x) * Mathf.Sin(y) * Mathf.Sin(z);
+            float sx = Mathf.Sin(x);
+            float sy = Mathf.Sin(y);
+            float sz = Mathf.Sin(z);
+            float cx = Mathf.Cos(x);
+            float cy = Mathf.Cos(y);
+            float cz = Mathf.Cos(z);
+            float qx = sx * cy * cz + cx * sy * sz;
+            float qy = cx * sy * cz - sx * cy * sz;
+            float qz = cx * cy * sz - sx * sy * cz;
+            float qw = cx * cy * cz + sx * sy * sz;
             return new Quaternion(qx, qy, qz, qw);
         }
 
