@@ -42,6 +42,8 @@ namespace WindowsFormsDevice
             GpuProgram.Initialize(device, DeviceWidth, DeviceHeight);
 
             CenterToScreen();
+
+            RefreshMaterialNameLabel();
         }
 
         void Tick(object sender, EventArgs e)
@@ -117,22 +119,22 @@ namespace WindowsFormsDevice
             {
                 materials = new Material[]
                 {
-                    material,
-                    new MaterialDiffuse(material.mainTexture, Color.yellow, new Vector4(1, 1, 0, 0)),
-                    new MaterialTiling(material.mainTexture, Color.white, new Vector4(8, 8, 0, 0)),
-                    new Material(material.mainTexture, Color.green),
-                    new MaterialDiffuse(texGrid, Color.white, new Vector4(1, 1, 0, 0)),
-                    new MaterialEffect(material.mainTexture, Color.white),
-                    new MaterialGray(material.mainTexture, Color.white),
-                    new MaterialNormal(material.mainTexture, Color.white),
-                    new MaterialBumpSelf(material.mainTexture, Color.gray),
-                    new Material(texNormal, Color.white),
-                    new MaterialBump(material.mainTexture, Color.gray, texNormal),
-                    new Material(material.mainTexture, Color.white).SetZTestEnable(false),
-                    new Material(material.mainTexture, Color.white).SetZWriteEnable(false),
-                    new Material(texPng, new Color(1, 1, 1, 1f)).SetBlendEnable(true).SetZWriteEnable(false),
-                    new Material(texPng, new Color(1, 1, 1, 1f)).SetBlendEnable(true).SetZWriteEnable(false)
-                        .SetBlendFactors(BlendMode.OneMinusSrcAlpha, BlendMode.SrcAlpha),
+                    material.SetName("Diffuse"),
+                    new Material(material.mainTexture, Color.green).SetName("Unlit(Green)"),
+                    new MaterialDiffuse(material.mainTexture, Color.yellow, new Vector4(1, 1, 0, 0)).SetName("Diffuse(Yellow)"),
+                    new MaterialTiling(material.mainTexture, Color.white, new Vector4(8, 8, 0, 0)).SetName("Tiling"),
+                    new MaterialDiffuse(texGrid, Color.white, new Vector4(1, 1, 0, 0)).SetName("Diffuse(Grid)"),
+                    new MaterialEffect(material.mainTexture, Color.white).SetName("Effect"),
+                    new MaterialGray(material.mainTexture, Color.white).SetName("Gray Output"),
+                    new MaterialNormal(material.mainTexture, Color.white).SetName("Normal Output"),
+                    new MaterialBumpSelf(material.mainTexture, Color.gray).SetName("Bump self"),
+                    new Material(texNormal, Color.white).SetName("Normal"),
+                    new MaterialBump(material.mainTexture, Color.gray, texNormal).SetName("Bump"),
+                    new Material(material.mainTexture, Color.white).SetZTestEnable(false).SetName("ZTest Off"),
+                    new Material(material.mainTexture, Color.white).SetZWriteEnable(false).SetName("ZWrite Off"),
+                    new Material(texPng, Color.white).SetBlendEnable(true).SetZWriteEnable(false).SetName("Transparent"),
+                    new Material(texPng, Color.white).SetBlendEnable(true).SetZWriteEnable(false)
+                        .SetBlendFactors(BlendMode.SrcAlpha, BlendMode.One).SetName("Blend(Additive)"),
                 };
             }
         }
@@ -154,6 +156,15 @@ namespace WindowsFormsDevice
             if (changeMaterialIndex >= materials.Length)
                 changeMaterialIndex = 0;
             material = materials[changeMaterialIndex];
+
+            RefreshMaterialNameLabel();
+        }
+
+        private void RefreshMaterialNameLabel()
+        {
+            InitializeMaterials();
+
+            MaterialName.Text = material.name;
         }
     }
 }

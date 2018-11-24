@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.ChangeMaterial = new System.Windows.Forms.Button();
+            this.MaterialName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ChangeMaterial
@@ -42,11 +43,22 @@
             this.ChangeMaterial.UseVisualStyleBackColor = true;
             this.ChangeMaterial.Click += new System.EventHandler(this.ChangeMaterial_Click);
             // 
+            // MaterialName
+            // 
+            this.MaterialName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.MaterialName.AutoSize = true;
+            this.MaterialName.Location = new System.Drawing.Point(1067, 639);
+            this.MaterialName.Name = "MaterialName";
+            this.MaterialName.Size = new System.Drawing.Size(47, 12);
+            this.MaterialName.TabIndex = 1;
+            this.MaterialName.Text = "unnamed";
+            // 
             // RenderView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.MaterialName);
             this.Controls.Add(this.ChangeMaterial);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -54,12 +66,14 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RenderView";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Button ChangeMaterial;
+        private System.Windows.Forms.Label MaterialName;
     }
 }
 

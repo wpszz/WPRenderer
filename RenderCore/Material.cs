@@ -4,6 +4,9 @@ namespace WPRenderer
 {
     public class Material : GpuShare
     {
+        // name
+        public string name;
+
         public Texture mainTexture;
         public Color mainColor = Color.white;
 
@@ -29,8 +32,15 @@ namespace WPRenderer
 
             mainTextureTexelSize = TexelSize(mainTexture);
 
-
+            this.name = "unnamed";
         }
+
+        public Material SetName(string name)
+        {
+            this.name = name;
+            return this;
+        }
+
         //===================================================================
 
         public Material SetZTestEnable(bool enable)
