@@ -117,6 +117,9 @@ namespace WPRenderer
                 // fixed float accuracy loss
                 tmpV.pos.y = v2.pos.y;
                 DrawFlatBottomTriangle(device, v2, tmpV, v3);
+                // skip line shared
+                v2.pos.y--;
+                tmpV.pos.y--;
                 DrawFlatTopTriangle(device, v2, tmpV, v1);
             }
         }
