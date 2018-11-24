@@ -26,6 +26,7 @@ namespace WindowsFormsDevice
             .SetSpecColor(Color.yellow).SetSpecular(2.5f).SetGloss(1.5f);
         Texture texGrid = LoadTexture("grid.jpg");
         Texture texNormal = LoadTexture("normal.jpg");
+        Texture texPng = LoadTexture("timg.png");
 
         public RenderView()
         {
@@ -129,7 +130,9 @@ namespace WindowsFormsDevice
                     new MaterialBump(material.mainTexture, Color.gray, texNormal),
                     new Material(material.mainTexture, Color.white).SetZTestEnable(false),
                     new Material(material.mainTexture, Color.white).SetZWriteEnable(false),
-                    new Material(material.mainTexture, new Color(1, 1, 1, 0.5f)).SetBlendEnable(true).SetZWriteEnable(false),
+                    new Material(texPng, new Color(1, 1, 1, 1f)).SetBlendEnable(true).SetZWriteEnable(false),
+                    new Material(texPng, new Color(1, 1, 1, 1f)).SetBlendEnable(true).SetZWriteEnable(false)
+                        .SetBlendFactors(BlendMode.OneMinusSrcAlpha, BlendMode.SrcAlpha),
                 };
             }
         }
