@@ -25,11 +25,18 @@ namespace WPRenderer
             if (currentLight != null)
             {
                 vertex.normal.Normalize();
+
                 // lambert
                 //float diffuse = currentLight.intensity * Vector3.Dot(currentLight.direction, vertex.normal);
                 // half lambert
                 float diffuse = 0.5f * currentLight.intensity * Vector3.Dot(currentLight.direction, vertex.normal) + 0.5f;
+
+                // alpha dont't need apply calculation
+                float alpha = color.a;
+
+                // finally colors
                 color *= currentLight.color * diffuse;
+                color.a = alpha;
             }
             return color;
         }
