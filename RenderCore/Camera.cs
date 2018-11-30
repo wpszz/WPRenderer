@@ -96,5 +96,14 @@ namespace WPRenderer
                 0,      0,      -1,     0
             );
         }
+
+        public override string ToString()
+        {
+            return $"WorldToLocalMatrix:\n{WorldToLocalMatrix()}" +
+                   $"LocalToWorldMatrix:\n{LocalToWorldMatrix()}" +
+                   $"WorldToCameraMatrix:\n{WorldToCameraMatrix()}" +
+                   $"CameraToWorldMatrix:\n{CameraToWorldMatrix()}" +
+                   $"ProjectionMatrix:\n{ProjectionMatrix()}";
+        }
     }
 }
