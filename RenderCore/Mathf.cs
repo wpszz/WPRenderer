@@ -87,6 +87,16 @@ namespace WPRenderer
             return (float)Math.Tan(x);
         }
 
+        public static float Acos(float x)
+        {
+            return (float)Math.Acos(x);
+        }
+
+        public static float Asin(float x)
+        {
+            return (float)Math.Asin(x);
+        }
+
         public static void Swap<T>(ref T a, ref T b)
         {
             T c = a;
@@ -119,5 +129,6 @@ namespace WPRenderer
         {
             return (int)Math.Ceiling(f);
         }
+
     }
 }
