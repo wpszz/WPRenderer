@@ -30,7 +30,8 @@ namespace WPRenderer
                     0, 0, 0, 1
                 );
 
-                tangentSpaceLight = objectToTangentSpace * currentInverseM * currentLight.direction;
+                // Note that use Matrix4x4.Mul3x3 rotation light direction(inverse).
+                tangentSpaceLight = objectToTangentSpace * Matrix4x4.Mul3x3(currentInverseM, -currentLight.direction);
             }
 
             return base.CallVertexStage(ref vertex);
@@ -52,9 +53,9 @@ namespace WPRenderer
                 normal.Normalize();
 
                 // lambert
-                float diffuse = currentLight.intensity * Vector3.Dot(tangentSpaceLight, normal);
+                //float diffuse = currentLight.intensity * Mathf.Max(0, Vector3.Dot(tangentSpaceLight, normal));
                 // half lambert
-                //float diffuse = 0.5f * currentLight.intensity * Vector3.Dot(tangentSpaceLight, normal) + 0.5f;
+                float diffuse = 0.5f * currentLight.intensity * Mathf.Max(0, Vector3.Dot(tangentSpaceLight, normal)) + 0.5f;
 
                 // alpha dont't need apply calculation
                 float alpha = color.a;

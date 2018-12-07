@@ -8,6 +8,8 @@ namespace WPRenderer
         public float specular = 1f;
         public float gloss = 1;
 
+        Vector3 invWorldSpaceLight;
+
         public MaterialSpecular(Texture mainTexture, Color mainColor, Vector4 tilingOffset) 
             : base(mainTexture, mainColor, tilingOffset)
         {
@@ -36,8 +38,14 @@ namespace WPRenderer
         {
             TransformTex(ref vertex.uv);
 
+            // convert to world normal, Note that rotation only(Mul3x3).
             vertex.normal = Matrix4x4.Mul3x3(currentM, vertex.normal).normalized;
 
+            // using inverse light direction dot product normal in the world space.
+            if (currentLight != null)
+                invWorldSpaceLight = Vector3.Normalize(-currentLight.direction);
+
+            // world position for calculate view direction.
             vertex.worldPos = currentM * vertex.pos;
 
             return currentMVP * vertex.pos;
@@ -52,14 +60,14 @@ namespace WPRenderer
 
                 // BlinnPhong
                 Vector3 V = (currentCamera.pos - vertex.worldPos).normalized;
-                Vector3 L = currentLight.direction.normalized;
+                Vector3 L = invWorldSpaceLight;
                 Vector3 H = (V + L).normalized;
                 float nh = Mathf.Max(0, Vector3.Dot(vertex.normal, H));
                 float spec = Mathf.Pow(nh, specular * 128.0f) * gloss;
 
-                //float diffuse = currentLight.intensity * Vector3.Dot(currentLight.direction, vertex.normal);
+                //float diffuse = currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal));
                 // half lambert
-                float diffuse = 0.5f * currentLight.intensity * Vector3.Dot(currentLight.direction, vertex.normal) + 0.5f;
+                float diffuse = 0.5f * currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal)) + 0.5f;
 
                 // alpha dont't need apply calculation
                 float alpha = color.a;

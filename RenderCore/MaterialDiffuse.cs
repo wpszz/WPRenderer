@@ -4,6 +4,8 @@ namespace WPRenderer
 {
     public class MaterialDiffuse : MaterialTiling
     {
+        Vector3 invWorldSpaceLight;
+
         public MaterialDiffuse(Texture mainTexture, Color mainColor, Vector4 tilingOffset) 
             : base(mainTexture, mainColor, tilingOffset)
         {
@@ -14,7 +16,12 @@ namespace WPRenderer
         {
             TransformTex(ref vertex.uv);
 
+            // convert to world normal, Note that rotation only(Mul3x3).
             vertex.normal = Matrix4x4.Mul3x3(currentM, vertex.normal).normalized;
+
+            // using inverse light direction dot product normal in the world space.
+            if (currentLight != null)
+                invWorldSpaceLight = Vector3.Normalize(-currentLight.direction);
 
             return currentMVP * vertex.pos;
         }
@@ -27,9 +34,9 @@ namespace WPRenderer
                 vertex.normal.Normalize();
 
                 // lambert
-                //float diffuse = currentLight.intensity * Vector3.Dot(currentLight.direction, vertex.normal);
+                //float diffuse = currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal));
                 // half lambert
-                float diffuse = 0.5f * currentLight.intensity * Vector3.Dot(currentLight.direction, vertex.normal) + 0.5f;
+                float diffuse = 0.5f * currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal)) + 0.5f;
 
                 // alpha dont't need apply calculation
                 float alpha = color.a;
