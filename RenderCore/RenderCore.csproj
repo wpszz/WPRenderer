@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CullFace.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="GpuShare.cs" />

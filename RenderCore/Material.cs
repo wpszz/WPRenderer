@@ -22,6 +22,9 @@ namespace WPRenderer
         public BlendMode srcFactorA = BlendMode.SrcAlpha;
         public BlendMode destFactorA = BlendMode.OneMinusSrcAlpha;
 
+        // cull
+        public CullFaceType cull = CullFaceType.None;
+
         // internal cache variables
         protected Vector4 mainTextureTexelSize;
 
@@ -84,6 +87,14 @@ namespace WPRenderer
             this.destFactor = destFactor;
             this.srcFactorA = srcFactorA;
             this.destFactorA = destFactorA;
+            return this;
+        }
+
+        //===================================================================
+
+        public Material SetCull(CullFaceType cull)
+        {
+            this.cull = cull;
             return this;
         }
 

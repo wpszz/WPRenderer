@@ -61,6 +61,8 @@ namespace WPRenderer
             currentMVP = P * (V * M);
             currentInverseM = Matrix4x4.Inverse(M);
 
+            CullFaceType faceCull = currentMaterial != null ? currentMaterial.cull : CullFaceType.None;
+
             for (int i = 0, count = mesh.indexs.Count; i < count; i += 3)
             {
                 Vertex v1 = mesh.vertexs[mesh.indexs[i]];
@@ -70,6 +72,9 @@ namespace WPRenderer
                 Vector4 hc1 = CallVertexStage(ref v1);
                 Vector4 hc2 = CallVertexStage(ref v2);
                 Vector4 hc3 = CallVertexStage(ref v3);
+
+                if (HomogeneousSpaceFaceCull(hc1, hc2, hc3, faceCull))
+                    continue;
 
                 if (CanonicalViewVolumeCull(hc1) && CanonicalViewVolumeCull(hc2) && CanonicalViewVolumeCull(hc3))
                     continue;
@@ -156,6 +161,28 @@ namespace WPRenderer
                 return colorBuffers[x, y];
             }
             return Color.white;
+        }
+
+        public static bool HomogeneousSpaceFaceCull(Vector4 hc1, Vector4 hc2, Vector4 hc3, CullFaceType cull)
+        {
+            if (cull != CullFaceType.None)
+            {
+                hc1 /= hc1.w;
+                hc2 /= hc2.w;
+                hc3 /= hc3.w;
+                Vector3 L21 = hc2 - hc1;
+                Vector3 L31 = hc3 - hc1;
+                L21.z = L31.z;
+
+                //Vector3 normal = Vector3.Cross(L31, L21);
+                float cross = L31.x * L21.y - L31.y * L21.x;
+
+                if (cull == CullFaceType.Back)
+                    return cross < 0;
+                if (cull == CullFaceType.Front)
+                    return cross > 0;
+            }
+            return false;
         }
 
         // CVV cull with homogeneous coordinate

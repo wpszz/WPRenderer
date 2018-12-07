@@ -135,6 +135,8 @@ namespace WindowsFormsDevice
                     new Material(texPng, Color.white).SetBlendEnable(true).SetZWriteEnable(false).SetName("Transparent"),
                     new Material(texPng, Color.white).SetBlendEnable(true).SetZWriteEnable(false)
                         .SetBlendFactors(BlendMode.SrcAlpha, BlendMode.One).SetName("Blend(Additive)"),
+                    new Material(material.mainTexture, Color.white).SetCull(CullFaceType.Back).SetName("Cull Back"),
+                    new Material(material.mainTexture, Color.white).SetCull(CullFaceType.Front).SetName("Cull Front"),
                 };
             }
         }

@@ -120,8 +120,8 @@ namespace WPRenderer
             mesh.AddVertex(new Vector3(-0.5f, -0.5f, 0.5f), c2, new Vector2(0, 0), new Vector3(0, -1, 0));
             mesh.AddVertex(new Vector3(0.5f, -0.5f, -0.5f), c3, new Vector2(1, 1), new Vector3(0, -1, 0));
             mesh.AddVertex(new Vector3(-0.5f, -0.5f, -0.5f), c4, new Vector2(0, 1), new Vector3(0, -1, 0));
-            mesh.AddTriangle(0, 3, 1);
-            mesh.AddTriangle(0, 2, 3);
+            mesh.AddTriangle(2, 1, 3);
+            mesh.AddTriangle(2, 0, 1);
 
             // top
             mesh.AddVertex(new Vector3(0.5f, 0.5f, 0.5f), c1, new Vector2(1, 0), new Vector3(0, 1, 0));
@@ -130,7 +130,7 @@ namespace WPRenderer
             mesh.AddVertex(new Vector3(-0.5f, 0.5f, -0.5f), c4, new Vector2(0, 1), new Vector3(0, 1, 0));
             mesh.AddTriangle(4, 7, 5);
             mesh.AddTriangle(4, 6, 7);
-
+ 
             // front
             mesh.AddVertex(new Vector3(0.5f, 0.5f, -0.5f), c1, new Vector2(1, 0), new Vector3(0, 0, -1));
             mesh.AddVertex(new Vector3(-0.5f, 0.5f, -0.5f), c2, new Vector2(0, 0), new Vector3(0, 0, -1));
@@ -144,24 +144,24 @@ namespace WPRenderer
             mesh.AddVertex(new Vector3(-0.5f, 0.5f, 0.5f), c2, new Vector2(0, 0), new Vector3(0, 0, 1));
             mesh.AddVertex(new Vector3(0.5f, -0.5f, 0.5f), c3, new Vector2(1, 1), new Vector3(0, 0, 1));
             mesh.AddVertex(new Vector3(-0.5f, -0.5f, 0.5f), c4, new Vector2(0, 1), new Vector3(0, 0, 1));
-            mesh.AddTriangle(12, 15, 13);
-            mesh.AddTriangle(12, 14, 15);
+            mesh.AddTriangle(13, 14, 12);
+            mesh.AddTriangle(13, 15, 14);
 
             // left
             mesh.AddVertex(new Vector3(-0.5f, 0.5f, 0.5f), c1, new Vector2(1, 0), new Vector3(-1, 0, 0));
             mesh.AddVertex(new Vector3(-0.5f, -0.5f, 0.5f), c2, new Vector2(0, 0), new Vector3(-1, 0, 0));
             mesh.AddVertex(new Vector3(-0.5f, 0.5f, -0.5f), c3, new Vector2(1, 1), new Vector3(-1, 0, 0));
             mesh.AddVertex(new Vector3(-0.5f, -0.5f, -0.5f), c4, new Vector2(0, 1), new Vector3(-1, 0, 0));
-            mesh.AddTriangle(16, 19, 17);
-            mesh.AddTriangle(16, 18, 19);
+            mesh.AddTriangle(18, 17, 16);
+            mesh.AddTriangle(18, 19, 17);
 
             // right
             mesh.AddVertex(new Vector3(0.5f, 0.5f, 0.5f), c1, new Vector2(1, 0), new Vector3(1, 0, 0));
             mesh.AddVertex(new Vector3(0.5f, -0.5f, 0.5f), c2, new Vector2(0, 0), new Vector3(1, 0, 0));
             mesh.AddVertex(new Vector3(0.5f, 0.5f, -0.5f), c3, new Vector2(1, 1), new Vector3(1, 0, 0));
             mesh.AddVertex(new Vector3(0.5f, -0.5f, -0.5f), c4, new Vector2(0, 1), new Vector3(1, 0, 0));
-            mesh.AddTriangle(20, 23, 21);
-            mesh.AddTriangle(20, 22, 23);
+            mesh.AddTriangle(20, 23, 22);
+            mesh.AddTriangle(20, 21, 23);
 
             mesh.RecalculateTangents();
             return mesh;
