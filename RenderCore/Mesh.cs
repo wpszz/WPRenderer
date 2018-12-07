@@ -19,6 +19,26 @@ namespace WPRenderer
             indexs.Add(k);
         }
 
+        public void RecalculateNormals()
+        {
+            for (int i = 0, count = indexs.Count; i < count; i += 3)
+            {
+                Vertex vert1 = vertexs[indexs[i]];
+                Vertex vert2 = vertexs[indexs[i + 1]];
+                Vertex vert3 = vertexs[indexs[i + 2]];
+
+                Vector3 L21 = vert2.pos - vert1.pos;
+                Vector3 L31 = vert3.pos - vert1.pos;
+
+                Vector3 normal = Vector3.Cross(L21, L31);
+                normal.Normalize();
+
+                vert1.normal = normal;
+                vert2.normal = normal;
+                vert3.normal = normal;
+            }
+        }
+
         public void RecalculateTangents()
         {
             for (int i = 0, count = indexs.Count; i < count; i += 3)
@@ -85,6 +105,7 @@ namespace WPRenderer
         public static Mesh CreatePanel(bool colored = false)
         {
             /*
+             * clockwise
              * 1  0
              * 3  2
              */
@@ -103,11 +124,17 @@ namespace WPRenderer
             mesh.AddTriangle(0, 2, 3);
 
             mesh.RecalculateTangents();
+            mesh.RecalculateNormals();
             return mesh;
         }
 
         public static Mesh CreateCube(bool colored = false)
         {
+            /*
+             * clockwise every face
+             * 1  0
+             * 3  2
+             */
             Mesh mesh = new Mesh();
 
             Color c1 = Color.white;
@@ -164,6 +191,7 @@ namespace WPRenderer
             mesh.AddTriangle(20, 21, 23);
 
             mesh.RecalculateTangents();
+            mesh.RecalculateNormals();
             return mesh;
         }
     }
