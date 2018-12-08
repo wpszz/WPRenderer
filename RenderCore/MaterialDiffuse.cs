@@ -20,8 +20,7 @@ namespace WPRenderer
             vertex.normal = Matrix4x4.Mul3x3(currentM, vertex.normal).normalized;
 
             // using inverse light direction dot product normal in the world space.
-            if (currentLight != null)
-                invWorldSpaceLight = Vector3.Normalize(-currentLight.direction);
+            invWorldSpaceLight = Vector3.Normalize(-currentLight.direction);
 
             return currentMVP * vertex.pos;
         }
@@ -29,22 +28,19 @@ namespace WPRenderer
         public override Color CallFragmentStage(ref Vertex vertex)
         {
             Color color = vertex.color * mainColor * Tex2D(mainTexture, vertex.uv.x, vertex.uv.y);
-            if (currentLight != null)
-            {
-                vertex.normal.Normalize();
+            vertex.normal.Normalize();
 
-                // lambert
-                //float diffuse = currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal));
-                // half lambert
-                float diffuse = 0.5f * currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal)) + 0.5f;
+            // lambert
+            //float diffuse = currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal));
+            // half lambert
+            float diffuse = 0.5f * currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal)) + 0.5f;
 
-                // alpha dont't need apply calculation
-                float alpha = color.a;
+            // alpha dont't need apply calculation
+            float alpha = color.a;
 
-                // finally colors
-                color *= currentLight.color * diffuse;
-                color.a = alpha;
-            }
+            // finally colors
+            color *= currentLight.color * diffuse;
+            color.a = alpha;
             return color;
         }
     }

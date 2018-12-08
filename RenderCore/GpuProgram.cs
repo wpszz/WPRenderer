@@ -44,7 +44,7 @@ namespace WPRenderer
 
         public static void SetDirectionLight(Light light)
         {
-            currentLight = light;
+            currentLight = light != null ? light : Light.none;
         }
 
         public static void SetCamera(Camera camera)
@@ -54,7 +54,7 @@ namespace WPRenderer
 
         public static void DrawCall(IDevice device, Mesh mesh, Material material, Matrix4x4 M, Matrix4x4 V, Matrix4x4 P)
         {
-            currentMaterial = material;
+            currentMaterial = material != null ? material : Material.none;
             currentM = M;
             currentV = V;
             currentP = P;
@@ -91,25 +91,19 @@ namespace WPRenderer
 
         public static Vector4 CallVertexStage(ref Vertex vertex)
         {
-            if (currentMaterial != null)
-                return currentMaterial.CallVertexStage(ref vertex);
-            return currentMVP * vertex.pos;
+            return currentMaterial.CallVertexStage(ref vertex);
         }
 
         public static bool CallFragmentStage(ref Vertex vertex, int x, int y, out Color finallyColor)
         {
             ResetDiscard();
 
-            finallyColor = vertex.color;
-            if (currentMaterial != null)
-            {
-                finallyColor = currentMaterial.CallFragmentStage(ref vertex);
+            finallyColor = currentMaterial.CallFragmentStage(ref vertex);
 
-                // blend
-                if (currentMaterial.blendEnbale)
-                    finallyColor = BlendColor.Calculate(finallyColor, GetBufferColor(x, y),
-                        currentMaterial.blendOp, currentMaterial.srcFactor, currentMaterial.destFactor, currentMaterial.srcFactorA, currentMaterial.destFactorA);
-            }
+            // color blend
+            if (currentMaterial.blendEnbale)
+                finallyColor = BlendColor.Calculate(finallyColor, GetBufferColor(x, y),
+                    currentMaterial.blendOp, currentMaterial.srcFactor, currentMaterial.destFactor, currentMaterial.srcFactorA, currentMaterial.destFactorA);
 
             // alpha test
             if (IsAlphaTestOn() && !AlphaTest.IsPass(currentMaterial.alphaTest, finallyColor.a, currentMaterial.alphaTestValue))
@@ -129,23 +123,17 @@ namespace WPRenderer
 
         public static bool IsZTestOn()
         {
-            if (currentMaterial != null)
-                return currentMaterial.zTest;
-            return true;
+            return currentMaterial.zTest;
         }
 
         public static bool IsZWriteOn()
         {
-            if (currentMaterial != null)
-                return currentMaterial.zWrite;
-            return true;
+            return currentMaterial.zWrite;
         }
 
         public static bool IsAlphaTestOn()
         {
-            if (currentMaterial != null)
-                return currentMaterial.alphaTest != AlphaTestType.Always;
-            return false;
+            return currentMaterial.alphaTest != AlphaTestType.Always;
         }
 
         public static bool ZTest(int x, int y, float z)

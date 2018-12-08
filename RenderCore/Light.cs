@@ -4,6 +4,8 @@ namespace WPRenderer
 {
     public class Light
     {
+        public static readonly Light none = new Light(Vector3.right, Color.black, 0f);
+
         public Vector3 direction;
         public Color color = Color.white;
         public float intensity = 1f;

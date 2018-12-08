@@ -42,8 +42,7 @@ namespace WPRenderer
             vertex.normal = Matrix4x4.Mul3x3(currentM, vertex.normal).normalized;
 
             // using inverse light direction dot product normal in the world space.
-            if (currentLight != null)
-                invWorldSpaceLight = Vector3.Normalize(-currentLight.direction);
+            invWorldSpaceLight = Vector3.Normalize(-currentLight.direction);
 
             // world position for calculate view direction.
             vertex.worldPos = currentM * vertex.pos;
@@ -54,28 +53,25 @@ namespace WPRenderer
         public override Color CallFragmentStage(ref Vertex vertex)
         {
             Color color = vertex.color * mainColor * Tex2D(mainTexture, vertex.uv.x, vertex.uv.y);
-            if (currentLight != null && currentCamera != null)
-            {
-                vertex.normal.Normalize();
+            vertex.normal.Normalize();
 
-                // BlinnPhong
-                Vector3 V = (currentCamera.pos - vertex.worldPos).normalized;
-                Vector3 L = invWorldSpaceLight;
-                Vector3 H = (V + L).normalized;
-                float nh = Mathf.Max(0, Vector3.Dot(vertex.normal, H));
-                float spec = Mathf.Pow(nh, specular * 128.0f) * gloss;
+            // BlinnPhong
+            Vector3 V = (currentCamera.pos - vertex.worldPos).normalized;
+            Vector3 L = invWorldSpaceLight;
+            Vector3 H = (V + L).normalized;
+            float nh = Mathf.Max(0, Vector3.Dot(vertex.normal, H));
+            float spec = Mathf.Pow(nh, specular * 128.0f) * gloss;
 
-                //float diffuse = currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal));
-                // half lambert
-                float diffuse = 0.5f * currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal)) + 0.5f;
+            //float diffuse = currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal));
+            // half lambert
+            float diffuse = 0.5f * currentLight.intensity * Mathf.Max(0, Vector3.Dot(invWorldSpaceLight, vertex.normal)) + 0.5f;
 
-                // alpha dont't need apply calculation
-                float alpha = color.a;
+            // alpha dont't need apply calculation
+            float alpha = color.a;
 
-                // finally colors
-                color = color * currentLight.color * diffuse + currentLight.color * specColor * spec;
-                color.a = alpha;
-            }
+            // finally colors
+            color = color * currentLight.color * diffuse + currentLight.color * specColor * spec;
+            color.a = alpha;
             return color;
         }
     }
