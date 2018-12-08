@@ -14,5 +14,25 @@ namespace WPRenderer
         protected static Vector4 currentSinTime;
         protected static Light currentLight;
         protected static Camera currentCamera;
+
+        // simple discard simulation
+        private static bool discardCurrentPixel;
+        protected static void Discard()
+        {
+            discardCurrentPixel = true;
+        }
+        protected static void ResetDiscard()
+        {
+            discardCurrentPixel = false;
+        }
+        protected static bool IsDiscard()
+        {
+            return discardCurrentPixel;
+        }
+        protected static void Clip(float value)
+        {
+            if (value < 0)
+                Discard();
+        }
     }
 }

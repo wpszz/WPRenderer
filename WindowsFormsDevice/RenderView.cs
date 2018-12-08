@@ -142,6 +142,7 @@ namespace WindowsFormsDevice
                         .SetBlendFactors(BlendMode.SrcAlpha, BlendMode.One).SetName("Blend(Additive)"),
                     new Material(material.mainTexture, Color.white).SetCull(CullFaceType.Back).SetName("Cull Back"),
                     new Material(material.mainTexture, Color.white).SetCull(CullFaceType.Front).SetName("Cull Front"),
+                    new Material(texPng, Color.white).SetAlphaTest(AlphaTestType.Greater, 0.001f).SetName("Alpha Test"),
                 };
             }
         }

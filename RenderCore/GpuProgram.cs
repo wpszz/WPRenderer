@@ -96,24 +96,33 @@ namespace WPRenderer
             return currentMVP * vertex.pos;
         }
 
-        public static Color CallFragmentStage(ref Vertex vertex, int x, int y)
+        public static bool CallFragmentStage(ref Vertex vertex, int x, int y, out Color finallyColor)
         {
-            Color color = vertex.color;
+            ResetDiscard();
+
+            finallyColor = vertex.color;
             if (currentMaterial != null)
             {
-                color = currentMaterial.CallFragmentStage(ref vertex);
+                finallyColor = currentMaterial.CallFragmentStage(ref vertex);
 
                 // blend
                 if (currentMaterial.blendEnbale)
-                    color = BlendColor.Calculate(color, GetBufferColor(x, y),
+                    finallyColor = BlendColor.Calculate(finallyColor, GetBufferColor(x, y),
                         currentMaterial.blendOp, currentMaterial.srcFactor, currentMaterial.destFactor, currentMaterial.srcFactorA, currentMaterial.destFactorA);
             }
 
-            SetBufferColor(x, y, color);
+            // alpha test
+            if (IsAlphaTestOn() && !AlphaTest.IsPass(currentMaterial.alphaTest, finallyColor.a, currentMaterial.alphaTestValue))
+                Discard();
+
+            if (IsDiscard())
+                return false;            
+
+            SetBufferColor(x, y, finallyColor);
 
             // simple clamp color values to [0, 1]
-            color = Color.Saturate(color);
-            return color;
+            finallyColor = Color.Saturate(finallyColor);
+            return true;
         }
 
         //=================================================================
@@ -132,18 +141,28 @@ namespace WPRenderer
             return true;
         }
 
-        public static bool ZTest(int x, int y, float z, bool writeON)
+        public static bool IsAlphaTestOn()
+        {
+            if (currentMaterial != null)
+                return currentMaterial.alphaTest != AlphaTestType.Always;
+            return false;
+        }
+
+        public static bool ZTest(int x, int y, float z)
         {
             if (x >= 0 && x < bufferWidth && y >= 0 && y < bufferHeight)
             {
-                if (zBuffers[x, y] <= z)
-                {
-                    if (writeON)
-                        zBuffers[x, y] = z;
-                    return true;
-                }
+                return zBuffers[x, y] <= z;
             }
             return false;
+        }
+
+        public static void SetBufferZ(int x, int y, float z)
+        {
+            if (x >= 0 && x < bufferWidth && y >= 0 && y < bufferHeight)
+            {
+                zBuffers[x, y] = z;
+            }
         }
 
         public static void SetBufferColor(int x, int y, Color color)
@@ -162,6 +181,8 @@ namespace WPRenderer
             }
             return Color.white;
         }
+
+        //=================================================================
 
         public static bool HomogeneousSpaceFaceCull(Vector4 hc1, Vector4 hc2, Vector4 hc3, CullFaceType cull)
         {

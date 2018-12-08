@@ -56,15 +56,24 @@ namespace WPRenderer
             float invertZ = 0;
             bool zTest = GpuProgram.IsZTestOn();
             bool zWrite = GpuProgram.IsZWriteOn();
+            bool alphaTest = GpuProgram.IsAlphaTestOn();
+            Color finallyColor;
             for (int i = 0; i <= dx; i++, x += stepX)
             {
                 t = i * delta;
                 invertZ = Mathf.Lerp(v1.pos.z, v2.pos.z, t);
-                if (!zTest || GpuProgram.ZTest(x, y, invertZ, zWrite))
+                if (!zTest || GpuProgram.ZTest(x, y, invertZ))
                 {
                     Vertex lv = Vertex.Lerp(v1, v2, t);
                     lv.uv /= invertZ; // real uv mapping by multiple z (or division 1/z)
-                    device.DrawPixel(x, y, GpuProgram.CallFragmentStage(ref lv, x, y));
+
+                    if (GpuProgram.CallFragmentStage(ref lv, x, y, out finallyColor))
+                    {
+                        device.DrawPixel(x, y, finallyColor);
+
+                        if (zWrite)
+                            GpuProgram.SetBufferZ(x, y, invertZ);
+                    }
                 }
 
                 errorValue += dy2;

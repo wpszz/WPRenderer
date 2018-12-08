@@ -61,6 +61,14 @@ namespace WPRenderer
             }
         }
 
+        public static Color magenta
+        {
+            get
+            {
+                return new Color(1f, 0f, 1f, 1f);
+            }
+        }
+
         public Color(float r, float g, float b, float a = 1)
         {
             this.r = r;

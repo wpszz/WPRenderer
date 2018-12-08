@@ -4,6 +4,9 @@ namespace WPRenderer
 {
     public class Material : GpuShare
     {
+        // None 
+        public static readonly Material none = new Material(null, Color.magenta).SetName("None");
+
         // name
         public string name;
 
@@ -21,6 +24,10 @@ namespace WPRenderer
         public BlendMode destFactor = BlendMode.OneMinusSrcAlpha;
         public BlendMode srcFactorA = BlendMode.SrcAlpha;
         public BlendMode destFactorA = BlendMode.OneMinusSrcAlpha;
+
+        // alpha test
+        public AlphaTestType alphaTest = AlphaTestType.Always;
+        public float alphaTestValue = 0.001f;
 
         // cull
         public CullFaceType cull = CullFaceType.None;
@@ -87,6 +94,14 @@ namespace WPRenderer
             this.destFactor = destFactor;
             this.srcFactorA = srcFactorA;
             this.destFactorA = destFactorA;
+            return this;
+        }
+        //===================================================================
+
+        public Material SetAlphaTest(AlphaTestType type, float alpha)
+        {
+            this.alphaTest = type;
+            this.alphaTestValue = alpha;
             return this;
         }
 
