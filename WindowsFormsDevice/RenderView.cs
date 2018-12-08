@@ -89,6 +89,11 @@ namespace WindowsFormsDevice
             pitch = -60 + curTime * 25;
             yaw = curTime * 25;
             roll = 0;
+            if (manualRotation.Checked)
+            {
+                pitch = pitchBar.Value;
+                yaw = yawBar.Value;
+            }
             M = Matrix4x4.TRS(new Vector3(x, y, z), Quaternion.Euler(pitch, yaw, roll), Vector3.one);
             GpuProgram.DrawCall(device, meshCube, material, M, V, P);
         }
