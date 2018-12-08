@@ -156,7 +156,26 @@ namespace WindowsFormsDevice
             return material;
         }
 
-        private void ChangeMaterial_Click(object sender, EventArgs e)
+        private void RefreshMaterialNameLabel()
+        {
+            InitializeMaterials();
+
+            MaterialName.Text = material.name;
+        }
+
+        private void PrevMaterial_Click(object sender, EventArgs e)
+        {
+            InitializeMaterials();
+
+            changeMaterialIndex--;
+            if (changeMaterialIndex < 0)
+                changeMaterialIndex = materials.Length - 1;
+            material = materials[changeMaterialIndex];
+
+            RefreshMaterialNameLabel();
+        }
+
+        private void NextMaterial_Click(object sender, EventArgs e)
         {
             InitializeMaterials();
 
@@ -166,13 +185,6 @@ namespace WindowsFormsDevice
             material = materials[changeMaterialIndex];
 
             RefreshMaterialNameLabel();
-        }
-
-        private void RefreshMaterialNameLabel()
-        {
-            InitializeMaterials();
-
-            MaterialName.Text = material.name;
         }
     }
 }

@@ -28,36 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.ChangeMaterial = new System.Windows.Forms.Button();
+            this.nextMaterial = new System.Windows.Forms.Button();
             this.MaterialName = new System.Windows.Forms.Label();
             this.yawBar = new System.Windows.Forms.TrackBar();
             this.pitchBar = new System.Windows.Forms.TrackBar();
             this.manualRotation = new System.Windows.Forms.CheckBox();
+            this.prevMaterial = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.yawBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pitchBar)).BeginInit();
             this.SuspendLayout();
             // 
-            // ChangeMaterial
+            // nextMaterial
             // 
-            this.ChangeMaterial.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ChangeMaterial.Location = new System.Drawing.Point(710, 407);
-            this.ChangeMaterial.Name = "ChangeMaterial";
-            this.ChangeMaterial.Size = new System.Drawing.Size(75, 35);
-            this.ChangeMaterial.TabIndex = 0;
-            this.ChangeMaterial.Text = "change material";
-            this.ChangeMaterial.UseVisualStyleBackColor = true;
-            this.ChangeMaterial.Click += new System.EventHandler(this.ChangeMaterial_Click);
+            this.nextMaterial.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.nextMaterial.Location = new System.Drawing.Point(737, 423);
+            this.nextMaterial.Name = "nextMaterial";
+            this.nextMaterial.Size = new System.Drawing.Size(48, 18);
+            this.nextMaterial.TabIndex = 0;
+            this.nextMaterial.Text = ">>";
+            this.nextMaterial.UseVisualStyleBackColor = true;
+            this.nextMaterial.Click += new System.EventHandler(this.NextMaterial_Click);
             // 
             // MaterialName
             // 
             this.MaterialName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.MaterialName.AutoSize = true;
-            this.MaterialName.Location = new System.Drawing.Point(623, 427);
+            this.MaterialName.Location = new System.Drawing.Point(616, 427);
             this.MaterialName.Name = "MaterialName";
-            this.MaterialName.Size = new System.Drawing.Size(47, 12);
+            this.MaterialName.Size = new System.Drawing.Size(120, 12);
             this.MaterialName.TabIndex = 1;
-            this.MaterialName.Text = "unnamed";
-            this.MaterialName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.MaterialName.Text = "material name";
+            this.MaterialName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // yawBar
             // 
@@ -96,16 +96,28 @@
             this.manualRotation.Text = "manual rotation";
             this.manualRotation.UseVisualStyleBackColor = true;
             // 
+            // prevMaterial
+            // 
+            this.prevMaterial.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.prevMaterial.Location = new System.Drawing.Point(567, 423);
+            this.prevMaterial.Name = "prevMaterial";
+            this.prevMaterial.Size = new System.Drawing.Size(48, 18);
+            this.prevMaterial.TabIndex = 5;
+            this.prevMaterial.Text = "<<";
+            this.prevMaterial.UseVisualStyleBackColor = true;
+            this.prevMaterial.Click += new System.EventHandler(this.PrevMaterial_Click);
+            // 
             // RenderView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 441);
+            this.Controls.Add(this.prevMaterial);
             this.Controls.Add(this.manualRotation);
             this.Controls.Add(this.pitchBar);
             this.Controls.Add(this.yawBar);
             this.Controls.Add(this.MaterialName);
-            this.Controls.Add(this.ChangeMaterial);
+            this.Controls.Add(this.nextMaterial);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "RenderView";
@@ -120,11 +132,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Button ChangeMaterial;
+        private System.Windows.Forms.Button nextMaterial;
         private System.Windows.Forms.Label MaterialName;
         private System.Windows.Forms.TrackBar yawBar;
         private System.Windows.Forms.TrackBar pitchBar;
         private System.Windows.Forms.CheckBox manualRotation;
+        private System.Windows.Forms.Button prevMaterial;
     }
 }
 
