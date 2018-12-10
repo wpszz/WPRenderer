@@ -18,7 +18,8 @@ namespace WindowsFormsDevice
 
         const int DeviceWidth = 800;
         const int DeviceHeight = 480;
-        Camera camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1), Vector3.up, (float)DeviceWidth / DeviceHeight);
+        Camera camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1), Vector3.up, (float)DeviceWidth / DeviceHeight)
+            .SetOrthographic(false, 3);
         Light light = new Light(new Vector3(1, 0, 0), Color.white, 1f);
         Mesh meshCube = Mesh.CreateCube();
         Mesh meshPanel = Mesh.CreatePanel();
@@ -70,6 +71,8 @@ namespace WindowsFormsDevice
             float x, y, z;
             float pitch, yaw, roll;
             float curTime = TimeHelper.GetTimeSinceStartup();
+
+            camera.orthographic = orthographic.Checked;
 
             V = camera.WorldToCameraMatrix();
             P = camera.ProjectionMatrix();

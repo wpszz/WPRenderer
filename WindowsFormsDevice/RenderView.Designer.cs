@@ -34,6 +34,7 @@
             this.pitchBar = new System.Windows.Forms.TrackBar();
             this.manualRotation = new System.Windows.Forms.CheckBox();
             this.prevMaterial = new System.Windows.Forms.Button();
+            this.orthographic = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.yawBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pitchBar)).BeginInit();
             this.SuspendLayout();
@@ -107,11 +108,23 @@
             this.prevMaterial.UseVisualStyleBackColor = true;
             this.prevMaterial.Click += new System.EventHandler(this.PrevMaterial_Click);
             // 
+            // orthographic
+            // 
+            this.orthographic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.orthographic.AutoSize = true;
+            this.orthographic.Location = new System.Drawing.Point(364, 425);
+            this.orthographic.Name = "orthographic";
+            this.orthographic.Size = new System.Drawing.Size(96, 16);
+            this.orthographic.TabIndex = 6;
+            this.orthographic.Text = "orthographic";
+            this.orthographic.UseVisualStyleBackColor = true;
+            // 
             // RenderView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 441);
+            this.Controls.Add(this.orthographic);
             this.Controls.Add(this.prevMaterial);
             this.Controls.Add(this.manualRotation);
             this.Controls.Add(this.pitchBar);
@@ -138,6 +151,7 @@
         private System.Windows.Forms.TrackBar pitchBar;
         private System.Windows.Forms.CheckBox manualRotation;
         private System.Windows.Forms.Button prevMaterial;
+        private System.Windows.Forms.CheckBox orthographic;
     }
 }
 

@@ -12,6 +12,9 @@ namespace WPRenderer
         public float nearClipPlane;
         public float farClipPlane;
 
+        public bool orthographic;
+        public float orthographicSize;
+
         public Camera(Vector3 pos, Vector3 lookAt, Vector3 up, float aspect, float fieldOfView = 60f, float nearClipPlane = 0.3f, float farClipPlane = 1000f)
         {
             this.pos = pos;
@@ -21,6 +24,16 @@ namespace WPRenderer
             this.fieldOfView = fieldOfView;
             this.nearClipPlane = nearClipPlane;
             this.farClipPlane = farClipPlane;
+
+            this.orthographic = false;
+            this.orthographicSize = 3f;
+        }
+
+        public Camera SetOrthographic(bool orthographic, float orthographicSize)
+        {
+            this.orthographic = orthographic;
+            this.orthographicSize = orthographicSize;
+            return this;
         }
 
         // just compare with CameraToWorldMatrix(like Unity Transform.LocalToWorldMatrix)
@@ -84,6 +97,14 @@ namespace WPRenderer
         //http://www.songho.ca/opengl/gl_projectionmatrix.html
         public Matrix4x4 ProjectionMatrix()
         {
+            if (this.orthographic)
+                return OrthographicProjectionMatrix();
+            else
+                return PerspectiveProjectionMatrix();
+        }
+
+        public Matrix4x4 PerspectiveProjectionMatrix()
+        {
             float tanHalfFov = Mathf.Tan(Mathf.Deg2Rad * fieldOfView * 0.5f);
             float num1 = 1 / (aspect * tanHalfFov);
             float num2 = 1 / tanHalfFov;
@@ -94,6 +115,20 @@ namespace WPRenderer
                 0,      num2,   0,      0,
                 0,      0,      num3,   num4,
                 0,      0,      -1,     0
+            );
+        }
+
+        public Matrix4x4 OrthographicProjectionMatrix()
+        {
+            float num1 = 2 / (orthographicSize * aspect);
+            float num2 = 2 / orthographicSize;
+            float num3 = -2 / (farClipPlane - nearClipPlane);
+            float num4 = -(farClipPlane + nearClipPlane) / (farClipPlane - nearClipPlane);
+            return new Matrix4x4(
+                num1,   0,      0,      0,
+                0,      num2,   0,      0,
+                0,      0,      num3,   num4,
+                0,      0,      0,      1
             );
         }
 

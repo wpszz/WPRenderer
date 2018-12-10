@@ -9,6 +9,9 @@ namespace WPRenderer
         public Vector3 normal;
         public Vector3 tangent;
 
+        // extra datas, used by perspective division and uv perspective mapping
+        public float invertRealZ;
+
         // extra datas, used by shader
         public Vector3 worldPos;
 
@@ -19,8 +22,11 @@ namespace WPRenderer
             this.uv = uv;
             this.normal = normal;
 
-            // tangent will calculate from triangles
+            // default right, general will calculated when triangles import finish.
             this.tangent = Vector3.right;
+
+            // extra datas, used by perspective division and uv perspective mapping
+            this.invertRealZ = 0;
 
             // extra datas, used by shader
             this.worldPos = pos;
@@ -37,6 +43,9 @@ namespace WPRenderer
 
             // copy tangent
             v.tangent = from.tangent;
+
+            // extra datas, used by perspective division and uv perspective mapping
+            v.invertRealZ = Mathf.Lerp(from.invertRealZ, to.invertRealZ, t);
 
             // extra datas, used by shader
             v.worldPos = Vector3.Lerp(from.worldPos, to.worldPos, t);

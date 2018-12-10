@@ -25,7 +25,7 @@ namespace WPRenderer
             {
                 for (int j = 0; j < bufferHeight; j++)
                 {
-                    zBuffers[i, j] = float.MinValue;
+                    zBuffers[i, j] = float.MaxValue;
                     colorBuffers[i, j] = blackground;
                 }
             }
@@ -140,7 +140,7 @@ namespace WPRenderer
         {
             if (x >= 0 && x < bufferWidth && y >= 0 && y < bufferHeight)
             {
-                return zBuffers[x, y] <= z;
+                return z <= zBuffers[x, y];
             }
             return false;
         }
@@ -215,15 +215,17 @@ namespace WPRenderer
             /*
              * hc(x'z, y'z, z'z, z)
              */
-            float invertZ = 1 / hc.w;
-            vertex.pos.x = hc.x * invertZ;
-            vertex.pos.y = hc.y * invertZ;
-
-            // discard z', instead by 1/z for ZTest and uv sample 
-            vertex.pos.z = invertZ;
-
-            // uv is linear with 1/z, finially texture sample need restore(by multiple z or division 1/z from vertex.pos.z)
-            vertex.uv *= invertZ;
+            float invertRealZ = 1 / hc.w;
+            // NDC x component
+            vertex.pos.x = hc.x * invertRealZ;
+            // NDC y component
+            vertex.pos.y = hc.y * invertRealZ;
+            // keep homogeneous z component for ZTest
+            vertex.pos.z = hc.z;
+            // uv is linear dependent with 1/z
+            vertex.uv *= invertRealZ;
+            // store 1/z for real uv calculation before fragment stage
+            vertex.invertRealZ = invertRealZ;
         }
     }
 }
