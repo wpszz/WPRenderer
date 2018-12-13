@@ -32,6 +32,11 @@ namespace WPRenderer
             this.worldPos = pos;
         }
 
+        public override string ToString()
+        {
+            return string.Format("pos{0}, uv{1}", this.pos, this.uv);
+        }
+
         public static Vertex Lerp(Vertex from, Vertex to, float t)
         {
             Vertex v = new Vertex(
