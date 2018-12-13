@@ -28,25 +28,48 @@ namespace WPRenderer
         // w = y/far
         protected static Vector4 currentZBufferParams;
 
-        // Z buffer to linear 0..1 depth
+        // Z buffer to linear 0..1 depth (from near to far)
         protected static float Linear01Depth(float z)
         {
             if (currentCamera.orthographic)
             {
-                // https://stackoverflow.com/questions/8990735/how-to-use-opengl-orthographic-projection-with-the-depth-buffer
-                float zNear = currentProjectionParams.y;
-                float zFar = currentProjectionParams.z;
-                float cameraZ = (z * (zFar - zNear) + (zFar + zNear)) * -0.5f;
-                return (-cameraZ - zNear) / zFar;
+                float cameraZ = OrthographicCameraDepth(z);
+                return (-cameraZ - currentProjectionParams.y) / currentProjectionParams.z;
             }
-            return 1.0f / (currentZBufferParams.x * z + currentZBufferParams.y);
-        }
-        // Z buffer to linear depth
-        protected static float LinearEyeDepth(float z)
-        {
-            return 1.0f / (currentZBufferParams.z * z + currentZBufferParams.w);
+            else
+            {
+                float n = currentProjectionParams.y;
+                float f = currentProjectionParams.z;
+                return n * (z + 1.0f) / (f + n - z * (f - n));
+            }
+            //return 1.0f / (currentZBufferParams.x * z + currentZBufferParams.y);
         }
 
+        // Z buffer to linear depth (from eye to far)
+        protected static float LinearEyeDepth(float z)
+        {
+            if (currentCamera.orthographic)
+            {
+                float cameraZ = OrthographicCameraDepth(z);
+                return -cameraZ / currentProjectionParams.z;
+            }
+            else
+            {
+                float n = currentProjectionParams.y;
+                float f = currentProjectionParams.z;
+                return (2 * n) / (f + n - z * (f - n));
+            }
+            //return 1.0f / (currentZBufferParams.z * z + currentZBufferParams.w);
+        }
+
+        // Z buffer to orthographic camera space depth
+        // (https://stackoverflow.com/questions/8990735/how-to-use-opengl-orthographic-projection-with-the-depth-buffer)
+        protected static float OrthographicCameraDepth(float z)
+        {
+            float zNear = currentProjectionParams.y;
+            float zFar = currentProjectionParams.z;
+            return (z * (zFar - zNear) + (zFar + zNear)) * -0.5f;
+        }
 
         // simple discard simulation
         private static bool discardCurrentPixel;
