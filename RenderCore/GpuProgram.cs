@@ -50,6 +50,18 @@ namespace WPRenderer
         public static void SetCamera(Camera camera)
         {
             currentCamera = camera;
+
+            float x = 1;
+            float y = camera.nearClipPlane;
+            float z = camera.farClipPlane;
+            float w = 1 / camera.farClipPlane;
+            currentProjectionParams = new Vector4(x, y, z, w);
+
+            x = 1 - camera.farClipPlane / camera.nearClipPlane;
+            y = camera.farClipPlane / camera.nearClipPlane;
+            z = x / camera.farClipPlane;
+            w = y / camera.farClipPlane;
+            currentZBufferParams = new Vector4(x, y, z, w);
         }
 
         public static void DrawCall(IDevice device, Mesh mesh, Material material, Matrix4x4 M, Matrix4x4 V, Matrix4x4 P)
@@ -220,8 +232,8 @@ namespace WPRenderer
             vertex.pos.x = hc.x * invertRealZ;
             // NDC y component
             vertex.pos.y = hc.y * invertRealZ;
-            // keep homogeneous z component for ZTest
-            vertex.pos.z = hc.z;
+            // NDC z component for ZTest
+            vertex.pos.z = hc.z * invertRealZ;
             // uv is linear dependent with 1/z
             vertex.uv *= invertRealZ;
             // store 1/z for real uv calculation before fragment stage

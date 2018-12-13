@@ -19,7 +19,7 @@ namespace WindowsFormsDevice
         const int DeviceWidth = 800;
         const int DeviceHeight = 480;
         Camera camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1), Vector3.up, (float)DeviceWidth / DeviceHeight)
-            .SetOrthographic(false, 3);
+            .SetOrthographic(false, 3).SetNearFar(0.3f, 10f);
         Light light = new Light(new Vector3(1, 0, 0), Color.white, 1f);
         Mesh meshCube = Mesh.CreateCube();
         Mesh meshPanel = Mesh.CreatePanel();
@@ -146,6 +146,7 @@ namespace WindowsFormsDevice
                     new Material(material.mainTexture, Color.white).SetCull(CullFaceType.Back).SetName("Cull Back"),
                     new Material(material.mainTexture, Color.white).SetCull(CullFaceType.Front).SetName("Cull Front"),
                     new Material(texPng, Color.white).SetAlphaTest(AlphaTestType.Greater, 0.001f).SetName("Alpha Test"),
+                    new MaterialDepth(null, Color.white).SetName("Depth"),
                 };
             }
         }

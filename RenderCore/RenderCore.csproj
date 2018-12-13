@@ -50,6 +50,7 @@
     <Compile Include="Blend.cs" />
     <Compile Include="MaterialBump.cs" />
     <Compile Include="MaterialBumpSelf.cs" />
+    <Compile Include="MaterialDepth.cs" />
     <Compile Include="MaterialNormal.cs" />
     <Compile Include="MaterialGray.cs" />
     <Compile Include="MaterialEffect.cs" />

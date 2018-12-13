@@ -15,7 +15,7 @@ namespace WPRenderer
 
         public override string ToString()
         {
-            return string.Format("({0:F1}, {1:F1}, {2:F1}, {3:F1})", this.x, this.y, this.z, this.w);
+            return string.Format("({0:F3}, {1:F3}, {2:F3}, {3:F3})", this.x, this.y, this.z, this.w);
         }
 
         public static Vector4 Lerp(Vector4 a, Vector4 b, float t)

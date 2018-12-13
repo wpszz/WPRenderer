@@ -36,6 +36,25 @@ namespace WPRenderer
             return this;
         }
 
+        public Camera SetAspect(float aspect)
+        {
+            this.aspect = aspect;
+            return this;
+        }
+
+        public Camera SetFov(float fieldOfView)
+        {
+            this.fieldOfView = fieldOfView;
+            return this;
+        }
+
+        public Camera SetNearFar(float nearClipPlane, float farClipPlane)
+        {
+            this.nearClipPlane = nearClipPlane;
+            this.farClipPlane = farClipPlane;
+            return this;
+        }
+
         // just compare with CameraToWorldMatrix(like Unity Transform.LocalToWorldMatrix)
         public Matrix4x4 LocalToWorldMatrix()
         {

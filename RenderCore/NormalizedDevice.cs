@@ -53,7 +53,7 @@ namespace WPRenderer
             int errorValue = dy2 - dx;
             float delta = 1 / (dx == 0 ? 1.0f : dx);
             float t = 0;
-            float homogeneousZ = 0;
+            float z = 0;
             Vertex fragV;
             Color finallyColor;
             bool zTest = GpuProgram.IsZTestOn();
@@ -61,8 +61,8 @@ namespace WPRenderer
             for (int i = 0; i <= dx; i++, x += stepX)
             {
                 t = i * delta;
-                homogeneousZ = Mathf.Lerp(v1.pos.z, v2.pos.z, t);
-                if (!zTest || GpuProgram.ZTest(x, y, homogeneousZ))
+                z = Mathf.Lerp(v1.pos.z, v2.pos.z, t);
+                if (!zTest || GpuProgram.ZTest(x, y, z))
                 {
                     fragV = Vertex.Lerp(v1, v2, t);
                     fragV.uv /= fragV.invertRealZ; // real uv mapping by division 1/z
@@ -72,7 +72,7 @@ namespace WPRenderer
                         device.DrawPixel(x, y, finallyColor);
 
                         if (zWrite)
-                            GpuProgram.SetBufferZ(x, y, homogeneousZ);
+                            GpuProgram.SetBufferZ(x, y, z);
                     }
                 }
 
