@@ -261,7 +261,7 @@ namespace WPRenderer
             );
         }
 
-        public static Vector3 Mul3x3(Matrix4x4 lhs, Vector3 v)
+        public static Vector3 MultiplyVector(Matrix4x4 lhs, Vector3 v)
         {
             return new Vector3(
                 lhs.m00 * v.x + lhs.m01 * v.y + lhs.m02 * v.z,

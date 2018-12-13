@@ -38,8 +38,8 @@ namespace WPRenderer
         {
             TransformTex(ref vertex.uv);
 
-            // convert to world normal, Note that rotation only(Mul3x3).
-            vertex.normal = Matrix4x4.Mul3x3(currentM, vertex.normal).normalized;
+            // convert to world normal, Note that rotation only(MultiplyVector).
+            vertex.normal = Matrix4x4.MultiplyVector(currentM, vertex.normal).normalized;
 
             // using inverse light direction dot product normal in the world space.
             invWorldSpaceLight = Vector3.Normalize(-currentLight.direction);

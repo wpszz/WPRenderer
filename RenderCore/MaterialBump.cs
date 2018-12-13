@@ -28,8 +28,8 @@ namespace WPRenderer
                 0, 0, 0, 1
             );
 
-            // Note that use Matrix4x4.Mul3x3 rotation light direction(inverse).
-            tangentSpaceLight = objectToTangentSpace * Matrix4x4.Mul3x3(currentInverseM, -currentLight.direction);
+            // Note that use Matrix4x4.MultiplyVector rotate light direction(inverse).
+            tangentSpaceLight = objectToTangentSpace * Matrix4x4.MultiplyVector(currentInverseM, -currentLight.direction);
 
             return base.CallVertexStage(ref vertex);
         }
