@@ -28,7 +28,12 @@ namespace WPRenderer
         // w = y/far
         protected static Vector4 currentZBufferParams;
 
-        // Z buffer to linear 0..1 depth (from near to far)
+        protected static float NdcToDepth(float ndcZ)
+        {
+            return ndcZ * 0.5f + 0.5f;
+        }
+
+        // Z buffer to linear 0..1 depth (from near to far, z is NDC-Z)
         protected static float Linear01Depth(float z)
         {
             if (currentCamera.orthographic)
@@ -42,10 +47,9 @@ namespace WPRenderer
                 float f = currentProjectionParams.z;
                 return n * (z + 1.0f) / (f + n - z * (f - n));
             }
-            //return 1.0f / (currentZBufferParams.x * z + currentZBufferParams.y);
         }
 
-        // Z buffer to linear 0..1 depth (from eye to far)
+        // Z buffer to linear 0..1 depth (from eye to far, z is NDC-Z)
         protected static float Linear01EyeDepth(float z)
         {
             if (currentCamera.orthographic)
@@ -58,11 +62,13 @@ namespace WPRenderer
                 float n = currentProjectionParams.y;
                 float f = currentProjectionParams.z;
                 return (2 * n) / (f + n - z * (f - n));
+
+                //float depth = NdcToDepth(z);
+                //return 1.0f / (currentZBufferParams.x * depth + currentZBufferParams.y);
             }
-            //return 1.0f / (currentZBufferParams.z * z + currentZBufferParams.w);
         }
 
-        // Z buffer to linear depth (from eye to far)
+        // Z buffer to linear depth (from eye to far, z is NDC-Z)
         protected static float LinearEyeDepth(float z)
         {
             if (currentCamera.orthographic)
@@ -75,8 +81,10 @@ namespace WPRenderer
                 float n = currentProjectionParams.y;
                 float f = currentProjectionParams.z;
                 return (2 * n * f) / (f + n - z * (f - n));
+
+                //float depth = NdcToDepth(z);
+                //return 1.0f / (currentZBufferParams.z * depth + currentZBufferParams.w);
             }
-            //return 1.0f / (currentZBufferParams.z * z + currentZBufferParams.w);
         }
 
         // Z buffer to orthographic camera space depth
