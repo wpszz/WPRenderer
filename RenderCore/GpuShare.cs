@@ -45,8 +45,8 @@ namespace WPRenderer
             //return 1.0f / (currentZBufferParams.x * z + currentZBufferParams.y);
         }
 
-        // Z buffer to linear depth (from eye to far)
-        protected static float LinearEyeDepth(float z)
+        // Z buffer to linear 0..1 depth (from eye to far)
+        protected static float Linear01EyeDepth(float z)
         {
             if (currentCamera.orthographic)
             {
@@ -58,6 +58,23 @@ namespace WPRenderer
                 float n = currentProjectionParams.y;
                 float f = currentProjectionParams.z;
                 return (2 * n) / (f + n - z * (f - n));
+            }
+            //return 1.0f / (currentZBufferParams.z * z + currentZBufferParams.w);
+        }
+
+        // Z buffer to linear depth (from eye to far)
+        protected static float LinearEyeDepth(float z)
+        {
+            if (currentCamera.orthographic)
+            {
+                float cameraZ = OrthographicCameraDepth(z);
+                return -cameraZ;
+            }
+            else
+            {
+                float n = currentProjectionParams.y;
+                float f = currentProjectionParams.z;
+                return (2 * n * f) / (f + n - z * (f - n));
             }
             //return 1.0f / (currentZBufferParams.z * z + currentZBufferParams.w);
         }
