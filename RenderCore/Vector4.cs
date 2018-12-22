@@ -63,5 +63,10 @@ namespace WPRenderer
         {
             return new Vector3(v.x, v.y, v.z);
         }
+
+        public static float Dot(Vector4 lhs, Vector4 rhs)
+        {
+            return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+        }
     }
 }

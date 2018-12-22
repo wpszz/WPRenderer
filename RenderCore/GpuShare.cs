@@ -115,5 +115,24 @@ namespace WPRenderer
             if (value < 0)
                 Discard();
         }
+
+        // Encoding/decoding [0..1) floats into 8 bit/channel RGBA. Note that 1.0 will not be encoded properly.
+        protected static Vector4 EncodeFloatRGBA(float v)
+        {
+            Vector4 kEncodeMul = new Vector4(1.0f, 255.0f, 65025.0f, 16581375.0f);
+            float kEncodeBit = 1.0f / 255.0f;
+            Vector4 enc = kEncodeMul * v;
+            enc.x = Mathf.Frac(enc.x);
+            enc.y = Mathf.Frac(enc.y);
+            enc.z = Mathf.Frac(enc.z);
+            enc.w = Mathf.Frac(enc.w);
+            enc -= new Vector4(enc.y, enc.z, enc.w, enc.w) * kEncodeBit;
+            return enc;
+        }
+        protected static float DecodeFloatRGBA(Vector4 enc)
+        {
+            Vector4 kDecodeDot = new Vector4(1.0f, 1 / 255.0f, 1 / 65025.0f, 1 / 16581375.0f);
+            return Vector4.Dot(enc, kDecodeDot);
+        }
     }
 }

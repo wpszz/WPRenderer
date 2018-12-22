@@ -130,5 +130,9 @@ namespace WPRenderer
             return (int)Math.Ceiling(f);
         }
 
+        public static float Frac(float f)
+        {
+            return f - (int)f;
+        }
     }
 }
