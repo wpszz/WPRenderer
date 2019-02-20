@@ -128,6 +128,7 @@ namespace WindowsFormsDevice
                 materials = new Material[]
                 {
                     material.SetName("Specular"),
+                    new MaterialFresnel(material.mainTexture, Color.white, new Vector4(1, 1, 0, 0)).SetFresnelColor(Color.green).SetFresnelPow(5).SetName("Fresnel"),
                     new Material(material.mainTexture, Color.green).SetName("Unlit(Green)"),
                     new MaterialDiffuse(material.mainTexture, Color.yellow, new Vector4(1, 1, 0, 0)).SetName("Diffuse(Yellow)"),
                     new MaterialTiling(material.mainTexture, Color.white, new Vector4(8, 8, 0, 0)).SetName("Tiling"),

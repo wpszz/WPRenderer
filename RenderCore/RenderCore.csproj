@@ -54,6 +54,7 @@
     <Compile Include="MaterialNormal.cs" />
     <Compile Include="MaterialGray.cs" />
     <Compile Include="MaterialEffect.cs" />
+    <Compile Include="MaterialFresnel.cs" />
     <Compile Include="MaterialSpecular.cs" />
     <Compile Include="MaterialDiffuse.cs" />
     <Compile Include="MaterialTiling.cs" />
