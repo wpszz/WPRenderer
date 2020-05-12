@@ -58,7 +58,7 @@ namespace WPRenderer
         // just compare with CameraToWorldMatrix(like Unity Transform.LocalToWorldMatrix)
         public Matrix4x4 LocalToWorldMatrix()
         {
-            // TR = {0000, 0000, 0000, xyz1} * {right, up, forward, 0001}
+            // TR = {1000, 0100, 0010, xyz1} * {right, up, forward, 0001}
             Vector3 forward = (lookAt - pos).normalized;    // positive Z-Axis in the world
             Vector3 right = Vector3.Cross(this.up, forward).normalized;
             Vector3 up = Vector3.Cross(forward, right);
@@ -87,7 +87,7 @@ namespace WPRenderer
 
         public Matrix4x4 CameraToWorldMatrix()
         {
-            // TR = {0000, 0000, 0000, xyz1} * {right, up, forward, 0001}
+            // TR = {1000, 0100, 0010, xyz1} * {right, up, forward, 0001}
             Vector3 forward = (pos - lookAt).normalized;    // negative Z-Axis in the world
             Vector3 right = Vector3.Cross(forward, this.up).normalized;
             Vector3 up = Vector3.Cross(right, forward);
